@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class Attack : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public void OnStartAttack()
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnAttackEnd()
     {
-        
+
     }
 }
