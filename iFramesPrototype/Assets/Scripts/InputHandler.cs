@@ -10,11 +10,11 @@ public class InputHandler : MonoBehaviour
     [SerializeField] Animator anim;
     [SerializeField] Movement movement;
     [SerializeField] Attack attack;
+    [SerializeField] Dodge dodge;
 
     void Update()
     {
         GetInput();
-        UpdateAnimator();
 
         if(movement != null)
         {
@@ -23,9 +23,17 @@ public class InputHandler : MonoBehaviour
         }
         if (attack != null)
         {
-            if(attackInput)
+            if(attackInput && !attack.attacking && !dodge.dodging)
             {
                 attack.OnStartAttack();
+            }
+        }
+
+        if(dodge != null)
+        {
+            if(dodgeInput && !dodge.dodging && !attack.attacking)
+            {
+                dodge.OnStartDodge();
             }
         }
     }
@@ -38,22 +46,5 @@ public class InputHandler : MonoBehaviour
         moveInput = new Vector3(xInput, 0, zInput);
         dodgeInput = Input.GetKeyDown(KeyCode.LeftShift);
         attackInput = Input.GetMouseButtonDown(0);
-    }
-
-    void UpdateAnimator()
-    {
-        if(attackInput)
-        {
-            anim.SetTrigger("Attack");
-            attackInput = false;
-        }
-
-        if (dodgeInput)
-        {
-            anim.SetTrigger("Dodge");
-            dodgeInput = false;
-        }
-
-        anim.SetBool("Moving", moveInput != Vector3.zero);
     }
 }

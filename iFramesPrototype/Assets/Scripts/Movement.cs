@@ -8,6 +8,7 @@ public class Movement : MonoBehaviour
     [SerializeField] float moveSpeed;
     [SerializeField] float rotSpeed;
     [SerializeField] GameObject characterModel;
+    [HideInInspector] public bool moving;
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +27,14 @@ public class Movement : MonoBehaviour
 
     public void Move(Vector3 moveDir)
     {
-        characterController.SimpleMove(moveDir * moveSpeed);
+        if (moveDir != Vector3.zero)
+        {
+            characterController.SimpleMove(moveDir * moveSpeed);
+            moving = true;
+        }
+        else
+        {
+            moving = false;
+        }
     }
 }

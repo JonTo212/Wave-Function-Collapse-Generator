@@ -5,7 +5,7 @@ using UnityEngine;
 public class Attack : MonoBehaviour
 {
     [SerializeField] GameObject hitbox;
-    bool attacking;
+    [HideInInspector] public bool attacking;
     public int damage;
     public void OnStartAttack()
     {
