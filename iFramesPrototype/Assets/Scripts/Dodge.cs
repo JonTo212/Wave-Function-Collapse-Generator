@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Dodge : MonoBehaviour
 {
+    [SerializeField] GameObject hitbox;
+    bool dodging;
+
     public void OnStartDodge()
     {
 

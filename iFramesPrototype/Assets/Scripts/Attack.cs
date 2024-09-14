@@ -6,7 +6,7 @@ public class Attack : MonoBehaviour
 {
     [SerializeField] GameObject hitbox;
     bool attacking;
-    [HideInInspector] public int damage;
+    public int damage;
     public void OnStartAttack()
     {
         attacking = true;
@@ -16,6 +16,7 @@ public class Attack : MonoBehaviour
     public void OnAttackEnd()
     {
         attacking = false;
+        hitbox.GetComponent<HitboxDetect>().hit = false;
         hitbox.SetActive(false);
     }
 }
