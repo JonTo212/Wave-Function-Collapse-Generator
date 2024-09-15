@@ -17,8 +17,8 @@ public class Dodge : MonoBehaviour
     {
         dodging = true;
         dodgeStartMovementInput = input.moveInput;
-        StartCoroutine(HandleDodge());
         OnIFramesStart();
+        StartCoroutine(HandleDodge());
     }
     
     IEnumerator HandleDodge()

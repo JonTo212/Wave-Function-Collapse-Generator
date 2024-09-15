@@ -26,9 +26,25 @@ public class HitboxDetect : MonoBehaviour
 
         if (convertedMask == enemyLayer)
         {
-            Health health = other.GetComponent<Health>();
-            health.TakeDamage(attack.damage);
-            hit = true;
+            CapsuleCollider[] childColliders = other.GetComponentsInChildren<CapsuleCollider>();
+
+            foreach (CapsuleCollider collider in childColliders)
+            {
+                Health health = collider.GetComponentInParent<Health>();
+                Dodge dodge = collider.GetComponentInParent<Dodge>();
+
+                if (health != null && health.alive)
+                {
+                    if(dodge != null && dodge.dodging)
+                    {
+                        break;
+                    }
+
+                    health.OnTakeHitStart(attack.damage);
+                    hit = true;
+                    break;
+                }
+            }
         }
     }
 }

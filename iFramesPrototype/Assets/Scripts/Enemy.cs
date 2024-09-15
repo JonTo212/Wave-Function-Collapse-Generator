@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] float detectionDelay;
     [SerializeField] float attackRadius;
     [SerializeField] Attack attack;
+    [SerializeField] Health health;
     [SerializeField] float attackDelay;
     float squaredAttackRadius;
     float squaredDetectionRadius;
@@ -27,7 +28,7 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        if (!attack.attacking)
+        if (!attack.attacking && !health.gettingHit)
         {
             DetectPlayer();
             movement.Move(toOther);
