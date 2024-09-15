@@ -8,109 +8,65 @@ public class Enemy : MonoBehaviour
     [SerializeField] Transform player;
     [SerializeField] float detectionRadius;
     [SerializeField] float detectionDelay;
-    float squaredRadius;
+    [SerializeField] float attackRadius;
+    [SerializeField] Attack attack;
+    [SerializeField] float attackDelay;
+    float squaredAttackRadius;
+    float squaredDetectionRadius;
     float timer;
+    float attackTimer;
     Vector3 toOther;
     Movement movement;
 
     void Start()
     {
-        squaredRadius = detectionRadius * detectionRadius;
+        squaredDetectionRadius = detectionRadius * detectionRadius;
+        squaredAttackRadius = attackRadius * attackRadius;
         movement = GetComponent<Movement>();
     }
 
     void Update()
     {
-        DetectPlayer();
-        movement.Move(toOther);
-        movement.RotateCharacterModel(toOther);
+        if (!attack.attacking)
+        {
+            DetectPlayer();
+            movement.Move(toOther);
+            movement.RotateCharacterModel(toOther);
+        }
     }
 
     void DetectPlayer()
     {
-        if ((player.position - transform.position).sqrMagnitude <= squaredRadius)
+        float distanceToPlayerSquared = (player.position - transform.position).sqrMagnitude;
+        if (distanceToPlayerSquared <= squaredDetectionRadius)
         {
-            toOther = player.position - transform.position;
+            Vector3 debugRay = transform.position - player.position;
+            Debug.DrawRay(transform.position, debugRay, Color.red);
 
-            if (!Physics.Raycast(transform.position, toOther.normalized, toOther.magnitude))
+            timer += Time.deltaTime;
+            if(timer > detectionDelay)
             {
-                Debug.DrawRay(transform.position, toOther, Color.red);
-                timer += Time.deltaTime;
+                toOther = player.position - transform.position;
+
+                if (distanceToPlayerSquared <= squaredAttackRadius)
+                {
+                    toOther = Vector3.zero;
+                    attackTimer += Time.deltaTime;
+
+                    if (attackTimer > attackDelay)
+                    {
+                        attack.OnStartAttack();
+                        attackTimer = 0;
+                    }
+                }
             }
         }
         
         else
         {
             timer = 0;
+            attackTimer = 0;
             toOther = Vector3.zero;
         }
-    }
-}
-
-
-public class EnemyDetect : MonoBehaviour
-{
-    public Transform player;
-    public float detectionRadius;
-    public LayerMask obstacleMask;
-    float squaredRadius;
-    public float detectionDelay;
-    float timer;
-    [SerializeField] bool detected; //for visualization
-    [SerializeField] TMP_Text popupText;
-    [SerializeField] float textHeight;
-
-    void Start()
-    {
-        squaredRadius = detectionRadius * detectionRadius;
-    }
-
-    void Update()
-    {
-        if (Detect())
-        {
-            timer += Time.deltaTime;
-        }
-        else
-        {
-            timer = 0;
-            detected = false;
-            popupText.gameObject.SetActive(false);
-        }
-
-        if (timer > detectionDelay)
-        {
-            detected = true;
-            //do enemy stuff here
-
-            if (popupText != null)
-            {
-                popupText.gameObject.SetActive(true);
-
-                //Convert enemy position to screen position
-                Vector3 screenPosition = Camera.main.WorldToScreenPoint(transform.position + Vector3.up * textHeight);
-
-                //Update the position of the popupText to match the screen position
-                popupText.rectTransform.position = screenPosition;
-            }
-        }
-    }
-
-    bool Detect()
-    {
-        if ((player.position - transform.position).sqrMagnitude <= squaredRadius)
-        {
-            Vector3 toOther = player.position - transform.position;
-
-            if (Vector3.Dot(transform.forward, toOther.normalized) > Mathf.Cos(45 * Mathf.Deg2Rad))
-            {
-                if (!Physics.Raycast(transform.position, toOther.normalized, toOther.magnitude, obstacleMask))
-                {
-                    Debug.DrawRay(transform.position, toOther, Color.red);
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 }

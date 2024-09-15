@@ -15,26 +15,25 @@ public class InputHandler : MonoBehaviour
     void Update()
     {
         GetInput();
+        bool actionHappening = attack.attacking || dodge.dodging;
 
-        if(movement != null)
+        //attack check
+        if (attackInput && !actionHappening)
+        {
+            attack.OnStartAttack();
+        }
+
+        //dodge check
+        if (dodgeInput && !actionHappening)
+        {
+            dodge.OnStartDodge();
+        }
+
+        //movement check - can't move if attacking/dodging
+        if (!actionHappening)
         {
             movement.RotateCharacterModel(moveInput);
             movement.Move(moveInput);
-        }
-        if (attack != null)
-        {
-            if(attackInput && !attack.attacking && !dodge.dodging)
-            {
-                attack.OnStartAttack();
-            }
-        }
-
-        if(dodge != null)
-        {
-            if(dodgeInput && !dodge.dodging && !attack.attacking)
-            {
-                dodge.OnStartDodge();
-            }
         }
     }
 

@@ -7,27 +7,64 @@ public class Dodge : MonoBehaviour
     [SerializeField] Collider[] hitboxes;
     [HideInInspector] public bool dodging;
     [SerializeField] CharacterController characterController;
+    [SerializeField] InputHandler input;
     [SerializeField] Movement movement;
+    [SerializeField] float dodgeSpeed;
+    [SerializeField] Animator anim;
+    Vector3 dodgeStartMovementInput;
 
     public void OnStartDodge()
+    {
+        dodging = true;
+        dodgeStartMovementInput = input.moveInput;
+        StartCoroutine(HandleDodge());
+        OnIFramesStart();
+    }
+    
+    IEnumerator HandleDodge()
+    {
+        float dodgeTime = 0f;
+
+        //Get animator transition + animation full duration
+        AnimatorTransitionInfo transitionInfo = anim.GetAnimatorTransitionInfo(0);
+        AnimatorStateInfo stateInfo = anim.GetCurrentAnimatorStateInfo(0);
+
+        float totalDodgeDuration = transitionInfo.duration + stateInfo.length;
+
+        while (dodgeTime < totalDodgeDuration && dodging)
+        {
+            if (dodgeStartMovementInput != Vector3.zero)
+            {
+                characterController.Move(dodgeStartMovementInput * dodgeSpeed * Time.deltaTime);
+            }
+            else
+            {
+                characterController.Move(transform.forward * dodgeSpeed * Time.deltaTime);
+            }
+            dodgeTime += Time.deltaTime;
+
+            yield return null;
+        }
+    }
+
+    void OnDodgeEnd()
+    {
+        dodging = false;
+    }
+
+    void OnIFramesStart()
     {
         foreach (Collider col in hitboxes)
         {
             col.enabled = false;
         }
-
-        dodging = true;
     }
 
-    public void OnDodgeEnd()
+    void OnIFramesEnd()
     {
         foreach (Collider col in hitboxes)
         {
             col.enabled = true;
         }
-
-        dodging = false;
     }
-
-    //note for tmr - ondodgeend is on frame 60/98, onattackend is 72/90 -> check if it's gonna cause issues
 }

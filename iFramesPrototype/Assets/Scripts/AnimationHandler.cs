@@ -19,7 +19,8 @@ public class AnimationHandler : MonoBehaviour
     {
         anim.SetBool("Moving", movement.moving);
         anim.SetBool("Attack", attack.attacking);
-        if(dodge != null)
+
+        if(dodge != null) //enemy doesn't have dodge script
         {
             anim.SetBool("Dodge", dodge.dodging);
         }
