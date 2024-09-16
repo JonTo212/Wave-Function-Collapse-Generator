@@ -5,7 +5,8 @@ public enum TileType
 {
     Floor,
     Wall,
-    Corner
+    Corner,
+    Door
 }
 
 public class TileConstraints
@@ -17,6 +18,7 @@ public class TileConstraints
         Constraints[TileType.Floor] = new List<TileType> { TileType.Wall, TileType.Floor, TileType.Corner }; //floors can be beside anything
         Constraints[TileType.Wall] = new List<TileType> { TileType.Floor, TileType.Wall }; //walls can only be beside floors and walls
         Constraints[TileType.Corner] = new List<TileType> { TileType.Wall }; //corners can only be beside walls
+        Constraints[TileType.Door] = new List<TileType> { TileType.Wall, TileType.Corner }; //corners can only be beside walls
     }
 }
 
