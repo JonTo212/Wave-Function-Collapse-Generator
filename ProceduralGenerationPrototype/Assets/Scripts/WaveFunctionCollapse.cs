@@ -48,14 +48,30 @@ public class WaveFunctionCollapse : MonoBehaviour
         //set edges to be walls
         for (int x = 0; x < width; x++)
         {
-            grid[x, 0] = TileType.Wall; // Bottom edge
-            grid[x, length - 1] = TileType.Wall; // Top edge
+            if (x == 0 ||x == width - 1)
+            {
+                grid[x, 0] = TileType.Corner;
+                grid[x, length - 1] = TileType.Corner;
+            }
+            else
+            {
+                grid[x, 0] = TileType.Wall; //bottom edge
+                grid[x, length - 1] = TileType.Wall; //top edge
+            }
         }
 
         for (int z = 0; z < length; z++)
         {
-            grid[0, z] = TileType.Wall; // Left edge
-            grid[width - 1, z] = TileType.Wall; // Right edge
+            if (z == 0 || z == width - 1)
+            {
+                grid[0, z] = TileType.Corner;
+                grid[width - 1, z] = TileType.Corner;
+            }
+            else
+            {
+                grid[0, z] = TileType.Wall; // Left edge
+                grid[width - 1, z] = TileType.Wall; // Right edge
+            }
         }
 
         Collapse();
@@ -146,20 +162,39 @@ public class WaveFunctionCollapse : MonoBehaviour
 
         else if (tile == TileType.Corner)
         {
-            bool hasWallOnLeft = (x > 0 && grid[x - 1, z] == TileType.Wall);
-            bool hasWallOnBottom = (z > 0 && grid[x, z - 1] == TileType.Wall);
-
-            if (hasWallOnLeft && hasWallOnBottom)
+            if (x == 0 && z == 0) //bottom left corner
+            {
+                rotation = Quaternion.Euler(0, 180, 0);
+            }
+            else if (x == width - 1 && z == 0) //bottom right corner
+            {
+                rotation = Quaternion.Euler(0, 90, 0);
+            }
+            else if (x == 0 && z == length - 1) //top left corner
+            {
+                rotation = Quaternion.Euler(0, 270, 0);
+            }
+            else if (x == width - 1 && z == length - 1) //top right corner
             {
                 rotation = Quaternion.Euler(0, 0, 0);
             }
-            else if (hasWallOnLeft)
+            else
             {
-                rotation = Quaternion.Euler(0, 90, 0); //rotate 90 degrees if there's a wall on the left
-            }
-            else if (hasWallOnBottom)
-            {
-                rotation = Quaternion.Euler(0, 180, 0); //rotate 180 degrees if there's a wall on the bottom
+                bool hasWallOnLeft = (x > 0 && grid[x - 1, z] == TileType.Wall);
+                bool hasWallOnBottom = (z > 0 && grid[x, z - 1] == TileType.Wall);
+
+                if (hasWallOnLeft && hasWallOnBottom)
+                {
+                    rotation = Quaternion.Euler(0, 0, 0);
+                }
+                else if (hasWallOnLeft)
+                {
+                    rotation = Quaternion.Euler(0, 90, 0); //rotate 90 degrees if there's a wall on the left
+                }
+                else if (hasWallOnBottom)
+                {
+                    rotation = Quaternion.Euler(0, 180, 0); //rotate 180 degrees if there's a wall on the bottom
+                }
             }
         }
 
