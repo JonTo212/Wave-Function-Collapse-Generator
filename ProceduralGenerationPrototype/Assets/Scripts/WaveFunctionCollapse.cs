@@ -18,7 +18,7 @@ public class TileConstraints
         Constraints[TileType.Floor] = new List<TileType> { TileType.Wall, TileType.Floor, TileType.Corner }; //floors can be beside anything
         Constraints[TileType.Wall] = new List<TileType> { TileType.Floor, TileType.Wall }; //walls can only be beside floors and walls
         Constraints[TileType.Corner] = new List<TileType> { TileType.Wall }; //corners can only be beside walls
-        Constraints[TileType.Door] = new List<TileType> { TileType.Wall, TileType.Corner }; //corners can only be beside walls
+        Constraints[TileType.Door] = new List<TileType> { TileType.Wall, TileType.Corner }; //doors can only be beside walls
     }
 }
 
@@ -27,7 +27,7 @@ public class WaveFunctionCollapse : MonoBehaviour
     public int width = 10; //width of grid
     public int length = 10; //length of grid
     public TileType[,] grid; //2d array (e.g. (x,y) array)
-    public TileConstraints constraints = new TileConstraints(); //Checks constraints
+    public TileConstraints constraints = new TileConstraints(); //constraints
     public GameObject[] tilePrefabs; //actual tile objects to be instantiated
 
     void Start()
@@ -71,8 +71,8 @@ public class WaveFunctionCollapse : MonoBehaviour
             }
             else
             {
-                grid[0, z] = TileType.Wall; // Left edge
-                grid[width - 1, z] = TileType.Wall; // Right edge
+                grid[0, z] = TileType.Wall; //left edge
+                grid[width - 1, z] = TileType.Wall; //right edge
             }
         }
 
@@ -86,6 +86,7 @@ public class WaveFunctionCollapse : MonoBehaviour
             for (int z = 1; z < length - 1; z++)
             {
                 List<TileType> possibleTiles = GetPossibleTiles(x, z);
+
                 if (possibleTiles.Count > 0)
                 {
                     grid[x, z] = possibleTiles[Random.Range(0, possibleTiles.Count)]; //randomly select from possible tiles, fill grid with tiles
@@ -98,11 +99,29 @@ public class WaveFunctionCollapse : MonoBehaviour
     {
         List<TileType> possibleTiles = new List<TileType>(); //creates a list of tile types that will be filled with the possible tiles that can be instantiated in each grid slot
 
-        foreach (TileType tileType in System.Enum.GetValues(typeof(TileType))) //for each tile type
+        foreach (TileType tileType in System.Enum.GetValues(typeof(TileType))) //for each tile type in the enum
         {
-            bool isValid = true; 
-            if (x > 0 && !constraints.Constraints[tileType].Contains(grid[x - 1, z])) isValid = false; //checks left neighbouring tile to see if the current tile type is valid
-            if (z > 0 && !constraints.Constraints[tileType].Contains(grid[x, z - 1])) isValid = false; //checks bottom neighbouring tile to see if current tile type is valid
+            bool isValid = true;
+
+            if (x > 0 && !constraints.Constraints[tileType].Contains(grid[x - 1, z]))
+            {
+                isValid = false; //checks left neighbouring tile to see if the current tile type is valid
+            }
+
+            if (x > 0 && !constraints.Constraints[tileType].Contains(grid[x + 1, z]))
+            {
+                isValid = false; //checks right neighbouring tile to see if the current tile type is valid
+            }
+
+            if (z > 0 && !constraints.Constraints[tileType].Contains(grid[x, z - 1]))
+            {
+                isValid = false; //checks bottom neighbouring tile to see if current tile type is valid
+            }
+
+            if (z > 0 && !constraints.Constraints[tileType].Contains(grid[x, z + 1]))
+            {
+                isValid = false; //checks upper neighbouring tile to see if current tile type is valid
+            }
 
             if (isValid)
             {
