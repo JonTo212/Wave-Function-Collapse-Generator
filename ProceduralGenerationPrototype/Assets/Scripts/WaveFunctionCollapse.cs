@@ -24,9 +24,39 @@ public class WaveFunctionCollapse : MonoBehaviour
             Regenerate();
         }
     }
-    List<TileType> GetPossibleTiles(int x, int z) //feed the x and z value of grid
+    List<TileType> GetPossibleTiles(int x, int z) // Tile tile)
     {
         List<TileType> possibleTiles = new List<TileType>(); //creates a list of tile types that will be filled with the possible tiles that can be instantiated in each grid slot
+
+        /*foreach (TileType tileType in tile.constraints) //for each tile type in the enum
+        {
+            bool isValid = true;
+
+            if (x > 0 && grid[x - 1, z] != tileType) //checks the Constraints dictionary list to make sure that tiletype isn't in it
+            {
+                isValid = false; //checks left neighbouring tile to see if the current tile type is valid
+            }
+
+            if (x > 0 && grid[x + 1, z] != tileType)
+            {
+                isValid = false; //checks right neighbouring tile to see if the current tile type is valid
+            }
+
+            if (z > 0 && grid[x, z - 1] != tileType)
+            {
+                isValid = false; //checks bottom neighbouring tile to see if current tile type is valid
+            }
+
+            if (z > 0 && grid[x, z + 1] != tileType)
+            {
+                isValid = false; //checks upper neighbouring tile to see if current tile type is valid
+            }
+
+            if (isValid)
+            {
+                possibleTiles.Add(tileType); //adds possible tile types to the list of potential tiles for slot (x,z)
+            }
+        }*/
 
         foreach (TileType tileType in System.Enum.GetValues(typeof(TileType))) //for each tile type in the enum
         {
@@ -246,7 +276,7 @@ public class WaveFunctionCollapse : MonoBehaviour
         {
             for (int z = 1; z < length - 1; z++)
             {
-                List<TileType> possibleTiles = GetPossibleTiles(x, z);
+                List<TileType> possibleTiles = GetPossibleTiles(x, z); //tilePrefabs[(int)grid[x, z]].GetComponent<Tile>());
 
                 if (possibleTiles.Count > 0)
                 {
