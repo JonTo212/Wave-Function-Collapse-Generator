@@ -1,14 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
+public enum TileType
+{
+    Floor,
+    Wall,
+    Corner,
+    Door
+}
 
 public class WaveFunctionCollapse : MonoBehaviour
 {
     public int width = 10; //width of grid
     public int length = 10; //length of grid
     public TileType[,] grid; //2d array (e.g. (x,y) array)
-    public TileConstraints constraints = new TileConstraints(); //constraints
+    //public TileConstraints constraints = new TileConstraints(); //constraints
     public GameObject[] tilePrefabs; //actual tile objects to be instantiated
-    public bool regenerate;
+    bool regenerate;
     GameObject[] tiles;
 
     void Start()
@@ -58,7 +65,7 @@ public class WaveFunctionCollapse : MonoBehaviour
             }
         }*/
 
-        foreach (TileType tileType in System.Enum.GetValues(typeof(TileType))) //for each tile type in the enum
+        /* (TileType tileType in System.Enum.GetValues(typeof(TileType))) //for each tile type in the enum
         {
             bool isValid = true;
 
@@ -86,7 +93,7 @@ public class WaveFunctionCollapse : MonoBehaviour
             {
                 possibleTiles.Add(tileType); //adds possible tile types to the list of potential tiles for slot (x,z)
             }
-        }
+        }*/
 
         return possibleTiles;
     }
@@ -215,7 +222,7 @@ public class WaveFunctionCollapse : MonoBehaviour
     }
 
 
-    void Regenerate()
+    public void Regenerate()
     {
         foreach (GameObject tile in tiles)
         {
