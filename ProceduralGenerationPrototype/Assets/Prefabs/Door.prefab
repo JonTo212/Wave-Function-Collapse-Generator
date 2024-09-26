@@ -219,7 +219,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8129402457221006648}
-  - component: {fileID: 1375519260418215194}
+  - component: {fileID: 8396691517606507166}
   m_Layer: 0
   m_Name: Door
   m_TagString: Untagged
@@ -246,7 +246,7 @@ Transform:
   - {fileID: 2078245784574717443}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1375519260418215194
+--- !u!114 &8396691517606507166
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -255,20 +255,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 4409590664598788572}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cff95a3863a79a74da9c450e508c76c6, type: 3}
+  m_Script: {fileID: 11500000, guid: 227622e08a77b154394d3e52386eeb0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileConstraint:
-    contactType: Door
-    directionalConstraints:
-    - direction: 0
-      incompatibleContactTypes: []
-    - direction: 1
-      incompatibleContactTypes: []
-    - direction: 2
-      incompatibleContactTypes: []
-    - direction: 3
-      incompatibleContactTypes: []
+  contactType: Door
+  directionalConstraints:
+  - direction: 0
+    compatibleContactTypes: []
+  - direction: 1
+    compatibleContactTypes: []
+  - direction: 2
+    compatibleContactTypes: []
+  - direction: 3
+    compatibleContactTypes: []
 --- !u!1 &5882485633344824349
 GameObject:
   m_ObjectHideFlags: 0
