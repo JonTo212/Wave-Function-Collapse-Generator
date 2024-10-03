@@ -50,7 +50,8 @@ MonoBehaviour:
   contactType: Corner
   directionalConstraints:
   - direction: 0
-    compatibleContactTypes: []
+    compatibleContactTypes:
+    - Floor
   - direction: 1
     compatibleContactTypes:
     - Wall
@@ -58,7 +59,8 @@ MonoBehaviour:
     compatibleContactTypes:
     - Wall
   - direction: 3
-    compatibleContactTypes: []
+    compatibleContactTypes:
+    - Floor
 --- !u!1 &4780682812718579954
 GameObject:
   m_ObjectHideFlags: 0

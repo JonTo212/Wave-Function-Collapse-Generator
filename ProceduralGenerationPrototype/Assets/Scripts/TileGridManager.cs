@@ -6,13 +6,12 @@ public class TileGridManager : MonoBehaviour
     [SerializeField] Tile[] tiles;
     [SerializeField] int gridWidth = 5; //width of grid
     [SerializeField] int gridLength = 5; //length of grid
-    private Tile[,] grid;
+    Tile[,] grid;
     List<Tile>[,] possibleTiles; //list of possible tiles for each position in the grid
     List<GameObject> currentTiles;
 
     private void Start()
     {
-        currentTiles = new List<GameObject>();
         CreateGrid();
         WaveFunctionCollapse();
     }
@@ -20,6 +19,8 @@ public class TileGridManager : MonoBehaviour
     void CreateGrid()
     {
         grid = new Tile[gridWidth, gridLength];
+        possibleTiles = new List<Tile>[gridWidth, gridLength];
+        currentTiles = new List<GameObject>();
 
         for (int x = 0; x < gridWidth; x++)
         {
@@ -29,6 +30,8 @@ public class TileGridManager : MonoBehaviour
                 Tile newTile = Instantiate(tiles[0], position, Quaternion.identity); //fill grid with floors to begin with
                 newTile.name = $"Tile {x}_{y}"; //name the tiles so it's not all tilename(clone), less confusing
                 grid[x, y] = newTile;
+
+                possibleTiles[x, y] = new List<Tile>(tiles);
             }
         }
 
@@ -49,12 +52,11 @@ public class TileGridManager : MonoBehaviour
             for (int y = 0; y < gridLength; y++)
             {
                 List<Tile> possibleTiles = GetPossibleTiles(x, y);
-                int choose = Random.Range(0, possibleTiles.Count);
-                Tile chosenTile = possibleTiles[choose];
 
-                grid[x, y] = chosenTile;
+                int choose = Random.Range(0, possibleTiles.Count);
                 Vector3 position = new Vector3(x, 0, y);
-                Instantiate(chosenTile, position, Quaternion.identity);
+                Tile chosenTile = Instantiate(possibleTiles[choose], position, Quaternion.identity);
+                grid[x, y] = chosenTile;
             }
         }
     }
@@ -72,7 +74,6 @@ public class TileGridManager : MonoBehaviour
 
     List<Tile> GetPossibleTiles(int x, int y)
     {
-        List<Tile> possibleTiles = new List<Tile>();
         Tile currentTile = grid[x, y];
 
         //check left tile
@@ -80,9 +81,9 @@ public class TileGridManager : MonoBehaviour
         {
             Tile leftTile = grid[x - 1, y];
 
-            if (currentTile.IsValidContact(leftTile.GetContactType(), Vector2.right))
+            if (!currentTile.IsValidContact(leftTile.GetContactType(), Vector2.left))
             {
-                possibleTiles.Add(leftTile);
+                possibleTiles[x, y].Remove(leftTile);
             }
         }
 
@@ -91,9 +92,9 @@ public class TileGridManager : MonoBehaviour
         {
             Tile belowTile = grid[x, y - 1];
 
-            if (currentTile.IsValidContact(belowTile.GetContactType(), Vector2.up))
+            if (currentTile.IsValidContact(belowTile.GetContactType(), Vector2.down))
             {
-                possibleTiles.Add(belowTile);
+                possibleTiles[x, y].Remove(belowTile);
             }
         }
 
@@ -102,9 +103,9 @@ public class TileGridManager : MonoBehaviour
         {
             Tile rightTile = grid[x + 1, y];
 
-            if (currentTile.IsValidContact(rightTile.GetContactType(), Vector2.left))
+            if (currentTile.IsValidContact(rightTile.GetContactType(), Vector2.right))
             {
-                possibleTiles.Add(rightTile);
+                possibleTiles[x, y].Remove(rightTile);
             }
         }
 
@@ -113,13 +114,13 @@ public class TileGridManager : MonoBehaviour
         {
             Tile aboveTile = grid[x, y + 1];
 
-            if (currentTile.IsValidContact(aboveTile.GetContactType(), Vector2.down))
+            if (currentTile.IsValidContact(aboveTile.GetContactType(), Vector2.up))
             {
-                possibleTiles.Add(aboveTile);
+                possibleTiles[x, y].Remove(aboveTile);
             }
         }
 
-        return possibleTiles;
+        return possibleTiles[x,y];
     }
 
     public void Regenerate()

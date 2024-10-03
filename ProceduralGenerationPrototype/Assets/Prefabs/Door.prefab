@@ -261,9 +261,11 @@ MonoBehaviour:
   contactType: Door
   directionalConstraints:
   - direction: 0
-    compatibleContactTypes: []
+    compatibleContactTypes:
+    - Floor
   - direction: 1
-    compatibleContactTypes: []
+    compatibleContactTypes:
+    - Floor
   - direction: 2
     compatibleContactTypes:
     - Wall
