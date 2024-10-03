@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class TileGridManager : MonoBehaviour
 {
@@ -8,6 +7,7 @@ public class TileGridManager : MonoBehaviour
     [SerializeField] int gridWidth = 5; //width of grid
     [SerializeField] int gridLength = 5; //length of grid
     private Tile[,] grid;
+    List<Tile>[,] possibleTiles; //list of possible tiles for each position in the grid
     List<GameObject> currentTiles;
 
     private void Start()
@@ -48,51 +48,13 @@ public class TileGridManager : MonoBehaviour
         {
             for (int y = 0; y < gridLength; y++)
             {
-                Tile currentTile = grid[x, y];
+                List<Tile> possibleTiles = GetPossibleTiles(x, y);
+                int choose = Random.Range(0, possibleTiles.Count);
+                Tile chosenTile = possibleTiles[choose];
 
-                //check left tile
-                if (x > 0)
-                {
-                    Tile leftTile = grid[x - 1, y];
-
-                    if (!currentTile.IsValidContact(leftTile.GetContactType(), Vector2.right))
-                    {
-                        
-                    }
-                }
-
-                //check bottom tile
-                if (y > 0)
-                {
-                    Tile belowTile = grid[x, y - 1];
-
-                    if (!currentTile.IsValidContact(belowTile.GetContactType(), Vector2.up))
-                    {
-                        
-                    }
-                }
-
-                //check right tile
-                if (x < gridWidth - 1) 
-                {
-                    Tile rightTile = grid[x + 1, y];
-
-                    if (!currentTile.IsValidContact(rightTile.GetContactType(), Vector2.left))
-                    {
-
-                    }
-                }
-
-                //check above tile
-                if (y < gridLength - 1)
-                {
-                    Tile aboveTile = grid[x, y + 1];
-
-                    if (!currentTile.IsValidContact(aboveTile.GetContactType(), Vector2.down))
-                    {
-
-                    }
-                }
+                grid[x, y] = chosenTile;
+                Vector3 position = new Vector3(x, 0, y);
+                Instantiate(chosenTile, position, Quaternion.identity);
             }
         }
     }
@@ -106,6 +68,58 @@ public class TileGridManager : MonoBehaviour
                 Destroy(tile);
             }
         }
+    }
+
+    List<Tile> GetPossibleTiles(int x, int y)
+    {
+        List<Tile> possibleTiles = new List<Tile>();
+        Tile currentTile = grid[x, y];
+
+        //check left tile
+        if (x > 0)
+        {
+            Tile leftTile = grid[x - 1, y];
+
+            if (currentTile.IsValidContact(leftTile.GetContactType(), Vector2.right))
+            {
+                possibleTiles.Add(leftTile);
+            }
+        }
+
+        //check bottom tile
+        if (y > 0)
+        {
+            Tile belowTile = grid[x, y - 1];
+
+            if (currentTile.IsValidContact(belowTile.GetContactType(), Vector2.up))
+            {
+                possibleTiles.Add(belowTile);
+            }
+        }
+
+        //check right tile
+        if (x < gridWidth - 1)
+        {
+            Tile rightTile = grid[x + 1, y];
+
+            if (currentTile.IsValidContact(rightTile.GetContactType(), Vector2.left))
+            {
+                possibleTiles.Add(rightTile);
+            }
+        }
+
+        //check above tile
+        if (y < gridLength - 1)
+        {
+            Tile aboveTile = grid[x, y + 1];
+
+            if (currentTile.IsValidContact(aboveTile.GetContactType(), Vector2.down))
+            {
+                possibleTiles.Add(aboveTile);
+            }
+        }
+
+        return possibleTiles;
     }
 
     public void Regenerate()

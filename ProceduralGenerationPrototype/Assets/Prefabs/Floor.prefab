@@ -153,10 +153,26 @@ MonoBehaviour:
   contactType: Floor
   directionalConstraints:
   - direction: 0
-    compatibleContactTypes: []
+    compatibleContactTypes:
+    - Wall
+    - Corner
+    - Floor
+    - Door
   - direction: 1
-    compatibleContactTypes: []
+    compatibleContactTypes:
+    - Wall
+    - Corner
+    - Floor
+    - Door
   - direction: 2
-    compatibleContactTypes: []
+    compatibleContactTypes:
+    - Wall
+    - Corner
+    - Floor
+    - Door
   - direction: 3
-    compatibleContactTypes: []
+    compatibleContactTypes:
+    - Wall
+    - Corner
+    - Floor
+    - Door

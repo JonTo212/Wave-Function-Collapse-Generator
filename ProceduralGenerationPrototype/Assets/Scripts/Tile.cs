@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum Directions
@@ -17,21 +19,28 @@ public class DirectionalConstraint
     public Directions direction; //directional component of incompatibility
     public List<string> compatibleContactTypes; //incompatible types for corresponding direction
 
-    public Vector2 GetDirection()
+    public Vector2 GetDirection(Transform tileTransform)
     {
-        switch (direction)
+        switch (direction) //now checks the tile's directions (rather than a static vector2.up, vector2.right, etc.)
         {
             case Directions.Up:
-                return Vector2.up; //(0, 1)
+                return ProjectToGrid(tileTransform.up); 
             case Directions.Down:
-                return Vector2.down; //(0, -1)
+                return ProjectToGrid(-tileTransform.up); 
             case Directions.Left:
-                return Vector2.left; //(-1, 0)
+                return ProjectToGrid(-tileTransform.right);
             case Directions.Right:
-                return Vector2.right; //(1, 0)
+                return ProjectToGrid(tileTransform.right);
             default:
-                return Vector2.zero; //error case
+                return Vector2.zero;
         }
+    }
+
+    Vector2 ProjectToGrid(Vector3 direction3D)
+    {
+        //convert from 3D to 2D
+        //used to convert transform.direction to a vector2 (e.g. transform.up = (0, 1), but will account for rotations)
+        return new Vector2(direction3D.x, direction3D.z).normalized;
     }
 }
 
@@ -56,11 +65,11 @@ public class Tile : MonoBehaviour
     }
 
 
-    //returns the list of incompatible types by direction
+    //returns the list of compatible types by direction
     public List<string> GetCompatibleTypes(Vector2 direction)
     {
         //convert from direction enum to vector2, then search for the corresponding constraint
-        var directionalConstraint = directionalConstraints.Find(c => c.GetDirection() == direction);
+        var directionalConstraint = directionalConstraints.Find(c => c.GetDirection(transform) == direction);
 
         //spit out either the list of incompatible types or a new empty list of strings so there's no errors
         return directionalConstraint != null ? directionalConstraint.compatibleContactTypes : new List<string>(); 
@@ -71,7 +80,7 @@ public class Tile : MonoBehaviour
     public bool IsValidContact(string otherContactType, Vector2 direction)
     {
         //check whether the provided direction is in the directional constraints
-        var constraint = directionalConstraints.Find(c => c.GetDirection() == direction); 
+        var constraint = directionalConstraints.Find(c => c.GetDirection(transform) == direction); 
 
         if (constraint != null)
         {

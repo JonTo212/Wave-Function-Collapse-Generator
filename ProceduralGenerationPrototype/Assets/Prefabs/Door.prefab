@@ -265,9 +265,11 @@ MonoBehaviour:
   - direction: 1
     compatibleContactTypes: []
   - direction: 2
-    compatibleContactTypes: []
+    compatibleContactTypes:
+    - Wall
   - direction: 3
-    compatibleContactTypes: []
+    compatibleContactTypes:
+    - Wall
 --- !u!1 &5882485633344824349
 GameObject:
   m_ObjectHideFlags: 0

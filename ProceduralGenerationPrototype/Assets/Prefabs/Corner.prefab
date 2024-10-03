@@ -52,9 +52,11 @@ MonoBehaviour:
   - direction: 0
     compatibleContactTypes: []
   - direction: 1
-    compatibleContactTypes: []
+    compatibleContactTypes:
+    - Wall
   - direction: 2
-    compatibleContactTypes: []
+    compatibleContactTypes:
+    - Wall
   - direction: 3
     compatibleContactTypes: []
 --- !u!1 &4780682812718579954
