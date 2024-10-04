@@ -38,7 +38,7 @@ public class DirectionalConstraint
     {
         //convert from 3D to 2D
         //used to convert transform.direction to a vector2 (e.g. transform.up = (0, 1), but will account for rotations)
-        return new Vector2(direction3D.x, direction3D.z).normalized;
+        return new Vector2(direction3D.x, direction3D.z);
     }
 }
 
@@ -78,9 +78,13 @@ public class Tile : MonoBehaviour
     {
         //convert from 3D to 2D
         //used to convert transform.direction to a vector2 (e.g. transform.up = (0, 1), but will account for rotations)
-        return new Vector2(direction3D.x, direction3D.z).normalized;
+        return new Vector2(direction3D.x, direction3D.z);
     }
 
+    public List<DirectionalConstraint> GetDirectionalConstraints()
+    {
+        return directionalConstraints;
+    }
 
     //returns the current object's contact type
     public string GetContactType(Vector2 direction)
@@ -92,6 +96,7 @@ public class Tile : MonoBehaviour
 
         return directionToContactType[direction];
     }
+
 
     public void Rotate()
     {
@@ -113,14 +118,14 @@ public class Tile : MonoBehaviour
     {
         //get the contact type of the current tile in the given direction
         string currentTileContactType = GetContactType(direction);
-        Debug.Log($"Checking contact type for current tile at {transform.position} in direction {direction}: {currentTileContactType}");
+        Debug.Log($"Checking contact type for current tile at {ProjectToGrid(transform.position)} in direction {direction}: {currentTileContactType}");
 
         //get the opposite direction for the neighbouring tile
         Vector2 oppositeDirection = -direction;
 
         //get the contact type of the other tile in the opposite direction
         string otherTileContactType = otherTile != null ? otherTile.GetContactType(oppositeDirection) : "";
-        Debug.Log($"Checking contact type for other tile at {otherTile.transform.position} in direction {oppositeDirection}: {otherTileContactType}");
+        Debug.Log($"Checking contact type for other tile at {ProjectToGrid(otherTile.transform.position)} in direction {oppositeDirection}: {otherTileContactType}");
 
         //search for a directional constraint for the current tile in the given direction, otherwise it's null
         var currentTileConstraint = directionalConstraints.Count > 0 ? directionalConstraints.Find(c => c.GetDirection(transform) == direction) : null;
