@@ -118,32 +118,31 @@ public class Tile : MonoBehaviour
     {
         //get the contact type of the current tile in the given direction
         string currentTileContactType = GetContactType(direction);
-        Debug.Log($"Checking contact type for current tile at {ProjectToGrid(transform.position)} in direction {direction}: {currentTileContactType}");
 
         //get the opposite direction for the neighbouring tile
         Vector2 oppositeDirection = -direction;
 
         //get the contact type of the other tile in the opposite direction
         string otherTileContactType = otherTile != null ? otherTile.GetContactType(oppositeDirection) : "";
-        Debug.Log($"Checking contact type for other tile at {ProjectToGrid(otherTile.transform.position)} in direction {oppositeDirection}: {otherTileContactType}");
 
         //search for a directional constraint for the current tile in the given direction, otherwise it's null
         var currentTileConstraint = directionalConstraints.Count > 0 ? directionalConstraints.Find(c => c.GetDirection(transform) == direction) : null;
-        Debug.Log($"Current tile constraint in direction {direction}: {currentTileConstraint != null}");
 
         //search for a directional constraint for the other tile in the opposite direction, otherwise it's null
-        var otherTileConstraint = otherTile != null ? otherTile.directionalConstraints.Find(c => c.GetDirection(otherTile.transform) == oppositeDirection) : null;
-        Debug.Log($"Other tile constraint in direction {oppositeDirection}: {otherTileConstraint != null}");
+        var otherTileConstraint = otherTile.directionalConstraints.Count > 0 ? otherTile.directionalConstraints.Find(c => c.GetDirection(otherTile.transform) == oppositeDirection) : null;
 
-        //check if current tile is valid
+        Debug.Log($"Current Tile Contact Type: {currentTileContactType}, Other Tile Contact Type: {otherTileContactType}");
+        Debug.Log($"Current Tile Constraint: {currentTileConstraint}, Other Tile Constraint: {otherTileConstraint}");
+
+
+        //check if current tile is valid -> if there's no constraints or the current tile's constraints aren't in the other tile's incompatible types, it's true
         bool currentTileValid = currentTileConstraint == null || !currentTileConstraint.incompatibleContactTypes.Contains(otherTileContactType);
 
-        //check if the other tile is valid
+        //check if the other tile is valid -> if there's no constraints or the other tile's constraints aren't in the current tile's incompatible types, it's true
         bool otherTileValid = otherTileConstraint == null || !otherTileConstraint.incompatibleContactTypes.Contains(currentTileContactType);
 
         //if both are valid, then this connection can be made
         bool isValidConnection = currentTileValid && otherTileValid;
-        Debug.Log($"Connection validity between tiles: {isValidConnection}");
 
         return isValidConnection;
     }
