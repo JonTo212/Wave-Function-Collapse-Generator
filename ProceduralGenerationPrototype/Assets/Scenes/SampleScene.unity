@@ -157,8 +157,8 @@ MonoBehaviour:
   - {fileID: 4674015931709644124, guid: c51983bfacdeacb45b780ee63733ef19, type: 3}
   - {fileID: -5190944983883779546, guid: 7908f2fd1068c20428b307c3e9ad77bd, type: 3}
   - {fileID: 8396691517606507166, guid: a658b7774d5b00140b268152885bc5a9, type: 3}
-  gridWidth: 10
-  gridLength: 10
+  gridWidth: 2
+  gridLength: 2
 --- !u!4 &122850602
 Transform:
   m_ObjectHideFlags: 0

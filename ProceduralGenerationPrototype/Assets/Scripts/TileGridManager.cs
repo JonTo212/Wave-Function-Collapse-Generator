@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TileGridManager : MonoBehaviour
@@ -8,7 +9,6 @@ public class TileGridManager : MonoBehaviour
     [SerializeField] int gridLength = 5; //length of grid
     Tile[,] grid;
     List<Tile>[,] possibleTiles; //list of possible tiles for each position in the grid
-    List<GameObject> currentTiles;
 
     private void Start()
     {
@@ -20,7 +20,6 @@ public class TileGridManager : MonoBehaviour
     {
         grid = new Tile[gridWidth, gridLength];
         possibleTiles = new List<Tile>[gridWidth, gridLength];
-        currentTiles = new List<GameObject>();
 
         for (int x = 0; x < gridWidth; x++)
         {
@@ -30,17 +29,11 @@ public class TileGridManager : MonoBehaviour
                 int choose = Random.Range(0, possibleTiles[x,y].Count);
                 Tile newTile = possibleTiles[x, y][choose]; //Instantiate(possibleTiles[x, y][choose], position, Quaternion.identity); //fill grid with random pieces to start
                 newTile.name = $"Tile {x}_{y}"; //name the tiles so it's not all tilename(clone), less confusing
+                newTile.InitializeContactTypes();
                 grid[x, y] = newTile;
             }
         }
 
-        foreach(Tile tile in grid)
-        {
-            if (tile != null)
-            {
-                currentTiles.Add(tile.gameObject);
-            }
-        }
     }
 
     void WaveFunctionCollapse()
@@ -68,7 +61,7 @@ public class TileGridManager : MonoBehaviour
         {
             foreach (Tile tile in grid)
             {
-                Destroy(tile.gameObject);
+                DestroyImmediate(tile.gameObject);
             }
         }
     }
@@ -76,78 +69,80 @@ public class TileGridManager : MonoBehaviour
     List<Tile> GetPossibleTiles(int x, int y)
     {
         HashSet<Tile> tilesToRemove = new HashSet<Tile>();
-        Debug.Log($"Checking tile at ({x}, {y}), initial possibilities: {possibleTiles[x,y].Count}");
+
+        //Debug.Log($"Checking possible tiles at ({x}, {y}), initial count: {possibleTiles[x, y].Count}");
 
         foreach (Tile currentTile in possibleTiles[x, y])
         {
             bool valid = true;
 
-            //check left tile
-            if (x > 0 && grid[x - 1, y] != null)
+            // Check left tile
+            if (x > 1 && grid[x - 1, y] != null)
             {
                 Tile leftTile = grid[x - 1, y];
 
-                if (!currentTile.IsValidContact(leftTile.GetContactType(), Vector2.left))
+                if (!currentTile.IsValidContact(leftTile, Vector2.left)) 
                 {
                     valid = false;
-                    Debug.Log($"Tile {currentTile.GetContactType()} at ({x}, {y}) removed because of left neighbor at ({x - 1}, {y})");
+                    //Debug.Log($"Tile at ({x}, {y}) is invalid due to left neighbor at ({x - 1}, {y})");
                 }
             }
 
-            //check bottom tile
-            if (y > 0 && grid[x, y - 1] != null)
+            // Check bottom tile
+            if (y > 1 && grid[x, y - 1] != null)
             {
                 Tile belowTile = grid[x, y - 1];
 
-                if (!currentTile.IsValidContact(belowTile.GetContactType(), Vector2.down))
+                if (!currentTile.IsValidContact(belowTile, Vector2.down))
                 {
                     valid = false;
-                    Debug.Log($"Tile {currentTile.GetContactType()} at ({x}, {y}) removed because of bottom neighbor at ({x}, {y - 1})");
-
+                    //Debug.Log($"Tile at ({x}, {y}) is invalid due to below neighbor at ({x}, {y - 1})");
                 }
             }
 
-            //check right tile
+            // Check right tile
             if (x < gridWidth - 1 && grid[x + 1, y] != null)
             {
                 Tile rightTile = grid[x + 1, y];
 
-                if (!currentTile.IsValidContact(rightTile.GetContactType(), Vector2.right))
+                if (!currentTile.IsValidContact(rightTile, Vector2.right))
                 {
                     valid = false;
-                    Debug.Log($"Tile {currentTile.GetContactType()} at ({x}, {y}) removed because of right neighbor at ({x + 1}, {y})");
+                    //Debug.Log($"Tile at ({x}, {y}) is invalid due to right neighbor at ({x + 1}, {y})");
                 }
             }
 
-            //check above tile
+            // Check above tile
             if (y < gridLength - 1 && grid[x, y + 1] != null)
             {
                 Tile aboveTile = grid[x, y + 1];
 
-                if (!currentTile.IsValidContact(aboveTile.GetContactType(), Vector2.up))
+                if (!currentTile.IsValidContact(aboveTile, Vector2.up))
                 {
                     valid = false;
-                    Debug.Log($"Tile  {currentTile.GetContactType()}  at ({x}, {y}) removed because of above neighbor at ({x}, {y + 1})");
+                    //Debug.Log($"Tile at ({x}, {y}) is invalid due to above neighbor at ({x}, {y + 1})");
                 }
             }
 
-            //if the tile is invalid at any point, add it to the list of tiles to be removed
+            // If the tile is invalid at any point, add it to the list of tiles to be removed
             if (!valid)
             {
-                tilesToRemove.Add(currentTile);
+                //tilesToRemove.Add(currentTile);
+                //Debug.Log($"Removing tile {currentTile.name} at ({x}, {y}) due to invalid contact.");
             }
         }
 
-        //remove all invalid tiles after every tile is checked for each grid piece
+        // Remove all invalid tiles after every tile is checked for each grid piece
         foreach (Tile tile in tilesToRemove)
         {
             possibleTiles[x, y].Remove(tile);
         }
 
-         Debug.Log($"Tile at ({x}, {y}) remaining possibilities: {possibleTiles[x, y].Count}");
+        //Debug.Log($"Remaining possibilities at ({x}, {y}): {possibleTiles[x, y].Count}");
 
         return possibleTiles[x, y];
     }
+
 
 
     public void Regenerate()

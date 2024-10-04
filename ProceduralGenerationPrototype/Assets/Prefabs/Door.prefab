@@ -258,20 +258,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 227622e08a77b154394d3e52386eeb0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  contactType: Door
+  contactTypes:
+  - Door
+  - Floor
+  - DoorOnLeft
+  - DoorOnRight
   directionalConstraints:
   - direction: 0
-    compatibleContactTypes:
-    - Floor
+    incompatibleContactTypes:
+    - Wall
+    - Door
   - direction: 1
-    compatibleContactTypes:
-    - Floor
+    incompatibleContactTypes:
+    - Wall
+    - Door
   - direction: 2
-    compatibleContactTypes:
+    incompatibleContactTypes:
     - Wall
+    - Door
+    - DoorOnLeft
+    - DoorOnRight
+    - WallOnLeft
   - direction: 3
-    compatibleContactTypes:
+    incompatibleContactTypes:
     - Wall
+    - Door
+    - DoorOnLeft
+    - DoorOnRight
+    - WallOnRight
 --- !u!1 &5882485633344824349
 GameObject:
   m_ObjectHideFlags: 0

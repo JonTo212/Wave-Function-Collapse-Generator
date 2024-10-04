@@ -150,29 +150,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 227622e08a77b154394d3e52386eeb0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  contactType: Floor
+  contactTypes:
+  - Floor
+  - Floor
+  - Floor
+  - Floor
   directionalConstraints:
   - direction: 0
-    compatibleContactTypes:
-    - Wall
-    - Corner
-    - Floor
-    - Door
+    incompatibleContactTypes: []
   - direction: 1
-    compatibleContactTypes:
-    - Wall
-    - Corner
-    - Floor
-    - Door
+    incompatibleContactTypes: []
   - direction: 2
-    compatibleContactTypes:
-    - Wall
-    - Corner
-    - Floor
-    - Door
+    incompatibleContactTypes: []
   - direction: 3
-    compatibleContactTypes:
-    - Wall
-    - Corner
-    - Floor
-    - Door
+    incompatibleContactTypes: []
