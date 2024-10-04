@@ -22,9 +22,9 @@ public class DirectionalConstraint
         switch (direction) //now checks the tile's directions (rather than a static vector2.up, vector2.right, etc.)
         {
             case Directions.Up:
-                return ProjectToGrid(tileTransform.up); 
+                return ProjectToGrid(tileTransform.forward); 
             case Directions.Down:
-                return ProjectToGrid(-tileTransform.up); 
+                return ProjectToGrid(-tileTransform.forward); 
             case Directions.Left:
                 return ProjectToGrid(-tileTransform.right);
             case Directions.Right:
@@ -38,7 +38,7 @@ public class DirectionalConstraint
     {
         //convert from 3D to 2D
         //used to convert transform.direction to a vector2 (e.g. transform.up = (0, 1), but will account for rotations)
-        return new Vector2(direction3D.x, direction3D.y).normalized;
+        return new Vector2(direction3D.x, direction3D.z).normalized;
     }
 }
 
@@ -67,8 +67,8 @@ public class Tile : MonoBehaviour
         // Using transform directions (dynamic based on rotation) instead of fixed vectors
         directionToContactType = new Dictionary<Vector2, string>
         {
-            { ProjectToGrid(transform.up), contactTypes[0] }, //up
-            { ProjectToGrid(-transform.up), contactTypes[1] }, //down
+            { ProjectToGrid(transform.forward), contactTypes[0] }, //up
+            { ProjectToGrid(-transform.forward), contactTypes[1] }, //down
             { ProjectToGrid(transform.right), contactTypes[2] }, //right
             { ProjectToGrid(-transform.right), contactTypes[3] } //left
         };
@@ -78,7 +78,7 @@ public class Tile : MonoBehaviour
     {
         //convert from 3D to 2D
         //used to convert transform.direction to a vector2 (e.g. transform.up = (0, 1), but will account for rotations)
-        return new Vector2(direction3D.x, direction3D.y).normalized;
+        return new Vector2(direction3D.x, direction3D.z).normalized;
     }
 
 
@@ -122,8 +122,8 @@ public class Tile : MonoBehaviour
         string otherTileContactType = otherTile != null ? otherTile.GetContactType(oppositeDirection) : "";
         Debug.Log($"Checking contact type for other tile at {otherTile.transform.position} in direction {oppositeDirection}: {otherTileContactType}");
 
-        //search for a directional constraint for the current tile in the given direction
-        var currentTileConstraint = directionalConstraints.Find(c => c.GetDirection(transform) == direction);
+        //search for a directional constraint for the current tile in the given direction, otherwise it's null
+        var currentTileConstraint = directionalConstraints.Count > 0 ? directionalConstraints.Find(c => c.GetDirection(transform) == direction) : null;
         Debug.Log($"Current tile constraint in direction {direction}: {currentTileConstraint != null}");
 
         //search for a directional constraint for the other tile in the opposite direction, otherwise it's null
@@ -136,7 +136,7 @@ public class Tile : MonoBehaviour
         //check if the other tile is valid
         bool otherTileValid = otherTileConstraint == null || !otherTileConstraint.incompatibleContactTypes.Contains(currentTileContactType);
 
-        //if botha re valid, then this connection can be made
+        //if both are valid, then this connection can be made
         bool isValidConnection = currentTileValid && otherTileValid;
         Debug.Log($"Connection validity between tiles: {isValidConnection}");
 
