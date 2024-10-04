@@ -40,7 +40,7 @@ public class DirectionalConstraint
     {
         //convert from 3D to 2D
         //used to convert transform.direction to a vector2 (e.g. transform.up = (0, 1), but will account for rotations)
-        return new Vector2(direction3D.x, direction3D.z).normalized;
+        return new Vector2(direction3D.x, direction3D.y).normalized;
     }
 }
 
@@ -56,6 +56,7 @@ public class Tile : MonoBehaviour
 {
     [SerializeField] string contactType; //what contact type this is
     [SerializeField] List<DirectionalConstraint> directionalConstraints; //directional constraints for each face
+    int currentRotation = 0;
 
 
     //returns the current object's contact type
@@ -64,6 +65,10 @@ public class Tile : MonoBehaviour
         return contactType;
     }
 
+    public void Rotate()
+    {
+        currentRotation = (currentRotation + 1) % 4; //rotate clockwise for 360 degree checking
+    }
 
     //returns the list of compatible types by direction
     public List<string> GetCompatibleTypes(Vector2 direction)
@@ -75,7 +80,6 @@ public class Tile : MonoBehaviour
         return directionalConstraint != null ? directionalConstraint.compatibleContactTypes : new List<string>(); 
     }
 
-
     //check whether the contact type in a given direction is usable
     public bool IsValidContact(string otherContactType, Vector2 direction)
     {
@@ -84,7 +88,7 @@ public class Tile : MonoBehaviour
 
         if (constraint != null)
         {
-            //if the direction has constraints + if the provided string is NOT in the list of incompatible types, it is valid.
+            //if the direction has constraints + if the provided string is in the list of compatible types, it is valid.
             return constraint.compatibleContactTypes.Contains(otherContactType); 
         }
 

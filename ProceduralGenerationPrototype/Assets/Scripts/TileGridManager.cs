@@ -26,12 +26,11 @@ public class TileGridManager : MonoBehaviour
         {
             for (int y = 0; y < gridLength; y++)
             {
-                Vector3 position = new Vector3(x, 0, y);
-                Tile newTile = Instantiate(tiles[0], position, Quaternion.identity); //fill grid with floors to begin with
+                possibleTiles[x, y] = new List<Tile>(tiles);
+                int choose = Random.Range(0, possibleTiles[x,y].Count);
+                Tile newTile = possibleTiles[x, y][choose]; //Instantiate(possibleTiles[x, y][choose], position, Quaternion.identity); //fill grid with random pieces to start
                 newTile.name = $"Tile {x}_{y}"; //name the tiles so it's not all tilename(clone), less confusing
                 grid[x, y] = newTile;
-
-                possibleTiles[x, y] = new List<Tile>(tiles);
             }
         }
 
@@ -51,11 +50,13 @@ public class TileGridManager : MonoBehaviour
         {
             for (int y = 0; y < gridLength; y++)
             {
-                List<Tile> possibleTiles = GetPossibleTiles(x, y);
+                List<Tile> possibleTilesForCell = GetPossibleTiles(x, y);
 
-                int choose = Random.Range(0, possibleTiles.Count);
+                int choose = Random.Range(0, possibleTilesForCell.Count);
                 Vector3 position = new Vector3(x, 0, y);
-                Tile chosenTile = Instantiate(possibleTiles[choose], position, Quaternion.identity);
+
+                Tile chosenTile = Instantiate(possibleTilesForCell[choose], position, Quaternion.identity);
+                chosenTile.name = $"Tile {x}_{y}";
                 grid[x, y] = chosenTile;
             }
         }
@@ -63,65 +64,91 @@ public class TileGridManager : MonoBehaviour
 
     void DestroyGrid()
     {
-        if (currentTiles.Count > 0)
+        if (grid != null)
         {
-            foreach (GameObject tile in currentTiles)
+            foreach (Tile tile in grid)
             {
-                Destroy(tile);
+                Destroy(tile.gameObject);
             }
         }
     }
 
     List<Tile> GetPossibleTiles(int x, int y)
     {
-        Tile currentTile = grid[x, y];
+        HashSet<Tile> tilesToRemove = new HashSet<Tile>();
+        Debug.Log($"Checking tile at ({x}, {y}), initial possibilities: {possibleTiles[x,y].Count}");
 
-        //check left tile
-        if (x > 0)
+        foreach (Tile currentTile in possibleTiles[x, y])
         {
-            Tile leftTile = grid[x - 1, y];
+            bool valid = true;
 
-            if (!currentTile.IsValidContact(leftTile.GetContactType(), Vector2.left))
+            //check left tile
+            if (x > 0 && grid[x - 1, y] != null)
             {
-                possibleTiles[x, y].Remove(leftTile);
+                Tile leftTile = grid[x - 1, y];
+
+                if (!currentTile.IsValidContact(leftTile.GetContactType(), Vector2.left))
+                {
+                    valid = false;
+                    Debug.Log($"Tile {currentTile.GetContactType()} at ({x}, {y}) removed because of left neighbor at ({x - 1}, {y})");
+                }
+            }
+
+            //check bottom tile
+            if (y > 0 && grid[x, y - 1] != null)
+            {
+                Tile belowTile = grid[x, y - 1];
+
+                if (!currentTile.IsValidContact(belowTile.GetContactType(), Vector2.down))
+                {
+                    valid = false;
+                    Debug.Log($"Tile {currentTile.GetContactType()} at ({x}, {y}) removed because of bottom neighbor at ({x}, {y - 1})");
+
+                }
+            }
+
+            //check right tile
+            if (x < gridWidth - 1 && grid[x + 1, y] != null)
+            {
+                Tile rightTile = grid[x + 1, y];
+
+                if (!currentTile.IsValidContact(rightTile.GetContactType(), Vector2.right))
+                {
+                    valid = false;
+                    Debug.Log($"Tile {currentTile.GetContactType()} at ({x}, {y}) removed because of right neighbor at ({x + 1}, {y})");
+                }
+            }
+
+            //check above tile
+            if (y < gridLength - 1 && grid[x, y + 1] != null)
+            {
+                Tile aboveTile = grid[x, y + 1];
+
+                if (!currentTile.IsValidContact(aboveTile.GetContactType(), Vector2.up))
+                {
+                    valid = false;
+                    Debug.Log($"Tile  {currentTile.GetContactType()}  at ({x}, {y}) removed because of above neighbor at ({x}, {y + 1})");
+                }
+            }
+
+            //if the tile is invalid at any point, add it to the list of tiles to be removed
+            if (!valid)
+            {
+                tilesToRemove.Add(currentTile);
             }
         }
 
-        //check bottom tile
-        if (y > 0)
+        //remove all invalid tiles after every tile is checked for each grid piece
+        foreach (Tile tile in tilesToRemove)
         {
-            Tile belowTile = grid[x, y - 1];
-
-            if (currentTile.IsValidContact(belowTile.GetContactType(), Vector2.down))
-            {
-                possibleTiles[x, y].Remove(belowTile);
-            }
+            possibleTiles[x, y].Remove(tile);
         }
 
-        //check right tile
-        if (x < gridWidth - 1)
-        {
-            Tile rightTile = grid[x + 1, y];
+         Debug.Log($"Tile at ({x}, {y}) remaining possibilities: {possibleTiles[x, y].Count}");
 
-            if (currentTile.IsValidContact(rightTile.GetContactType(), Vector2.right))
-            {
-                possibleTiles[x, y].Remove(rightTile);
-            }
-        }
-
-        //check above tile
-        if (y < gridLength - 1)
-        {
-            Tile aboveTile = grid[x, y + 1];
-
-            if (currentTile.IsValidContact(aboveTile.GetContactType(), Vector2.up))
-            {
-                possibleTiles[x, y].Remove(aboveTile);
-            }
-        }
-
-        return possibleTiles[x,y];
+        return possibleTiles[x, y];
     }
+
 
     public void Regenerate()
     {

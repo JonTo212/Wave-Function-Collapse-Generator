@@ -226,7 +226,7 @@ public class WaveFunctionCollapse : MonoBehaviour
     {
         foreach (GameObject tile in tiles)
         {
-            Destroy(tile);
+            DestroyImmediate(tile);
         }
 
         grid = new TileType[width, length];

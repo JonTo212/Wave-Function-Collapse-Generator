@@ -273,3 +273,4 @@ MonoBehaviour:
     compatibleContactTypes:
     - Wall
     - Corner
+    - Door
