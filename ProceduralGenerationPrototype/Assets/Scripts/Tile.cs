@@ -14,7 +14,7 @@ public enum Directions
  */
 public class DirectionalConstraint
 {
-    public Directions direction; //directional component of incompatibility
+    [SerializeField] Directions direction; //directional component of incompatibility
     public List<string> incompatibleContactTypes; //incompatible types for corresponding direction
 
     public Vector2 GetDirection(Transform tileTransform)
@@ -34,7 +34,7 @@ public class DirectionalConstraint
         }
     }
 
-    Vector2 ProjectToGrid(Vector3 direction3D)
+    private Vector2 ProjectToGrid(Vector3 direction3D)
     {
         //convert from 3D to 2D
         //used to convert transform.direction to a vector2 (e.g. transform.up = (0, 1), but will account for rotations)
@@ -52,12 +52,12 @@ public class DirectionalConstraint
  */
 public class Tile : MonoBehaviour
 {
-    [SerializeField] List<string> contactTypes; //what contact type this is
-    [SerializeField] List<DirectionalConstraint> directionalConstraints; //directional constraints for each face
-    int currentRotation = 0;
-    Dictionary<Vector2, string> directionToContactType;
+    [SerializeField] private List<string> contactTypes; //what contact type this is
+    [SerializeField] private List<DirectionalConstraint> directionalConstraints; //directional constraints for each face
+    private int currentRotation = 0;
+    private Dictionary<Vector2, string> directionToContactType;
 
-    void Start()
+    private void Start()
     {
         InitializeContactTypes();
     }
@@ -74,7 +74,7 @@ public class Tile : MonoBehaviour
         };
     }
 
-    Vector2 ProjectToGrid(Vector3 direction3D)
+    private Vector2 ProjectToGrid(Vector3 direction3D)
     {
         //convert from 3D to 2D
         //used to convert transform.direction to a vector2 (e.g. transform.up = (0, 1), but will account for rotations)
@@ -98,11 +98,6 @@ public class Tile : MonoBehaviour
     }
 
 
-    public void Rotate()
-    {
-        currentRotation = (currentRotation + 1) % 4; //rotate clockwise for 360 degree checking
-    }
-
     //returns the list of incompatible types by direction
     public List<string> GetIncompatibleTypes(Vector2 direction)
     {
@@ -111,6 +106,11 @@ public class Tile : MonoBehaviour
 
         //spit out either the list of incompatible types or a new empty list of strings so there's no errors
         return directionalConstraint != null ? directionalConstraint.incompatibleContactTypes : new List<string>(); 
+    }
+
+    private void Rotate()
+    {
+        currentRotation = (currentRotation + 1) % 4; //rotate clockwise for 360 degree checking
     }
 
     //check whether the contact type in a given direction is usable

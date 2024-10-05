@@ -1,13 +1,14 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class TileGridManager : MonoBehaviour
 {
-    [SerializeField] Tile[] tiles;
-    [SerializeField] int gridWidth = 5; //width of grid
-    [SerializeField] int gridLength = 5; //length of grid
-    Tile[,] grid;
-    List<Tile>[,] possibleTiles; //list of possible tiles for each position in the grid
+    [SerializeField] private Tile[] tiles;
+    [SerializeField] private int gridWidth = 5; //width of grid
+    [SerializeField] private int gridLength = 5; //length of grid
+    private Tile[,] grid;
+    private List<Tile>[,] possibleTiles; //list of possible tiles for each position in the grid
 
     private void Start()
     {
@@ -15,7 +16,7 @@ public class TileGridManager : MonoBehaviour
         WaveFunctionCollapse();
     }
 
-    void CreateGrid()
+    private void CreateGrid()
     {
         grid = new Tile[gridWidth, gridLength];
         possibleTiles = new List<Tile>[gridWidth, gridLength];
@@ -35,9 +36,8 @@ public class TileGridManager : MonoBehaviour
 
     }
 
-    void WaveFunctionCollapse()
+    private void WaveFunctionCollapse()
     {
-        //need to figure out how to add logic for when things don't go together
         for (int x = 0; x < gridWidth; x++)
         {
             for (int y = 0; y < gridLength; y++)
@@ -55,7 +55,7 @@ public class TileGridManager : MonoBehaviour
         }
     }
 
-    void DestroyGrid()
+    private void DestroyGrid() //for regenerating
     {
         if (grid != null)
         {
@@ -66,7 +66,7 @@ public class TileGridManager : MonoBehaviour
         }
     }
 
-    List<Tile> GetPossibleTiles(int x, int y)
+    private List<Tile> GetPossibleTiles(int x, int y)
     {
         HashSet<Tile> tilesToRemove = new HashSet<Tile>();
 
@@ -147,7 +147,19 @@ public class TileGridManager : MonoBehaviour
         return possibleTiles[x, y];
     }
 
-    int CompareConstraints(Tile tileA, Tile tileB)
+    private bool CheckValidContact(Tile currentTile, Tile otherTile, Vector2 direction)
+    {
+        bool valid = true;
+
+        if(currentTile.IsValidContact(otherTile, direction))
+        {
+            valid = false;
+        }
+
+        return valid;
+    }
+
+    private int CompareConstraints(Tile tileA, Tile tileB)
     {
         //count constraints for tileA
         int tileAConstraintCount = CountConstraints(tileA);
@@ -159,7 +171,7 @@ public class TileGridManager : MonoBehaviour
         return tileAConstraintCount.CompareTo(tileBConstraintCount);
     }
 
-    int CountConstraints(Tile tile)
+    private int CountConstraints(Tile tile)
     {
         int constraintCount = 0;
 
