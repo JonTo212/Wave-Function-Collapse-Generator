@@ -11,7 +11,7 @@ public class WFCGenerator : MonoBehaviour
     private WFCNode[,] grid;
 
     [Header("Node Parameters")]
-    
+
     [SerializeField] private List<WFCNode> nodes;                    //list of all nodes
     private List<Vector2Int> toCollapse = new List<Vector2Int>();    //list of nodes that still need to be collapsed
 
@@ -31,7 +31,7 @@ public class WFCGenerator : MonoBehaviour
         {
             return true;
         }
-        else 
+        else
         {
             return false;
         }
@@ -39,7 +39,7 @@ public class WFCGenerator : MonoBehaviour
 
     private void ReducePossibleNodes(List<WFCNode> potentialNodes, List<WFCNode> validNodes) //remove all nodes that are invalid
     {
-        for(int i = potentialNodes.Count - 1; i >= 0; i--) //start at the end of the list so that it doesn't skip over nodes as they're being removed
+        for (int i = potentialNodes.Count - 1; i >= 0; i--) //start at the end of the list so that it doesn't skip over nodes as they're being removed
         {
             if (!validNodes.Contains(potentialNodes[i]))
             {
@@ -51,7 +51,7 @@ public class WFCGenerator : MonoBehaviour
     private WFCNode GetHighestWeightNode(List<WFCNode> potentialNodes)
     {
         WFCNode highestWeightedNode = potentialNodes[0];
-        int highestWeight = highestWeightedNode.weight; 
+        int highestWeight = highestWeightedNode.weight;
 
         for (int i = 1; i < potentialNodes.Count; i++) //loop through all potential nodes, starting with the first, updating weight and corresponding node each time
         {
@@ -67,9 +67,30 @@ public class WFCGenerator : MonoBehaviour
 
     #endregion
 
+    #region Regenerate function
+
+    private void DestroyGrid() //for regenerating -> for some reason using node.instantiatedObject doesn't destroy everything
+    {
+        GameObject[] instantiatedObjects = GameObject.FindGameObjectsWithTag("WFCNode");
+        foreach (GameObject go in instantiatedObjects)
+        {
+            Destroy(go);
+        }
+    }
+
+    public void Regenerate()
+    {
+        DestroyGrid();
+        InitializeGrid();
+        CollapseGrid();
+    }
+
+    #endregion
+
     private void Start()
     {
         InitializeGrid();
+        CollapseGrid();
     }
 
     private void InitializeGrid()
@@ -83,18 +104,18 @@ public class WFCGenerator : MonoBehaviour
 
         toCollapse.Add(new Vector2Int(gridWidth / 2, gridHeight / 2)); //start with middle tile
 
-        while(toCollapse.Count > 0)
+        while (toCollapse.Count > 0)
         {
             int x = toCollapse[0].x;
             int y = toCollapse[0].y;
 
             List<WFCNode> potentialNodes = new List<WFCNode>(nodes); //create a new list with all of the nodes to begin with
 
-            for(int i = 0; i < neighbourCoordinates.Length; i++ ) //loop through all neighbours (i.e. up, down, left, right)
+            for (int i = 0; i < neighbourCoordinates.Length; i++) //loop through all neighbours (i.e. up, down, left, right)
             {
                 Vector2Int neighbour = new Vector2Int(x + neighbourCoordinates[i].x, y + neighbourCoordinates[i].y); //this represents each neighbour position
 
-                if(IsInsideGrid(neighbour))
+                if (IsInsideGrid(neighbour))
                 {
                     WFCNode neighbourNode = grid[neighbour.x, neighbour.y];
 
@@ -122,17 +143,19 @@ public class WFCGenerator : MonoBehaviour
                 }
             }
 
-            if(potentialNodes.Count < 1) //no possible tiles based on constraints -> this can be changed if desired
+            if (potentialNodes.Count < 1) //no possible tiles based on constraints -> this can be changed if desired
             {
                 grid[x, y] = nodes[0]; //if no other possibilities, just add a floor
-                Debug.Log("Attempted to collapse on " + x + ", " + y + "but no compatible tiles.");
+                //Debug.Log("Attempted to collapse on " + x + ", " + y + " but no compatible tiles.");
             }
             else
             {
-                grid[x, y] = GetHighestWeightNode(potentialNodes); //choose the highest weighted node
+                grid[x, y] = potentialNodes[Random.Range(0, potentialNodes.Count)]; //choose random node
+                //grid[x, y] = GetHighestWeightNode(potentialNodes); //choose the highest weighted node
             }
 
             GameObject newNode = Instantiate(grid[x, y].prefab, new Vector3(x, 0, y), Quaternion.identity);
+            //grid[x, y].instantiatedObject = newNode; //for some reason this doesn't work
             toCollapse.RemoveAt(0);
         }
     }

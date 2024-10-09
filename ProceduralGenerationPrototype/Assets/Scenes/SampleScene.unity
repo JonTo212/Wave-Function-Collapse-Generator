@@ -139,7 +139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &122850601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,10 +153,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tiles:
-  - {fileID: 4962699533377218831, guid: 658a031a1138d424190e0bcd7de50bb3, type: 3}
-  - {fileID: 4674015931709644124, guid: c51983bfacdeacb45b780ee63733ef19, type: 3}
-  - {fileID: -5190944983883779546, guid: 7908f2fd1068c20428b307c3e9ad77bd, type: 3}
-  - {fileID: 8396691517606507166, guid: a658b7774d5b00140b268152885bc5a9, type: 3}
+  - {fileID: 4962699533377218831, guid: 637175f001cb4bd479d2379b1f3d05b0, type: 3}
+  - {fileID: 4674015931709644124, guid: f70c100c0986bb147b988ccc814303b6, type: 3}
+  - {fileID: -5190944983883779546, guid: 2458352086136584395bfc8671647680, type: 3}
+  - {fileID: 8396691517606507166, guid: b6d9b925a986f534f87ab3482eec9df6, type: 3}
   gridWidth: 2
   gridLength: 2
 --- !u!4 &122850602
@@ -268,60 +268,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1 &865360806
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 865360808}
-  - component: {fileID: 865360809}
-  m_Layer: 0
-  m_Name: TileManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &865360808
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 865360806}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &865360809
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 865360806}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bc80732fc9270f48a6a351d9739698e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tiles:
-  - {fileID: 745449460276910111, guid: 658a031a1138d424190e0bcd7de50bb3, type: 3}
-  - {fileID: 5049310047659339170, guid: c51983bfacdeacb45b780ee63733ef19, type: 3}
-  - {fileID: 1303821596382928437, guid: 7908f2fd1068c20428b307c3e9ad77bd, type: 3}
-  - {fileID: 4409590664598788572, guid: a658b7774d5b00140b268152885bc5a9, type: 3}
-  ruleObjects:
-  - gameObjects: []
-  - gameObjects: []
-  - gameObjects: []
-  - gameObjects: []
 --- !u!1 &866362581
 GameObject:
   m_ObjectHideFlags: 0
@@ -494,13 +440,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 719a9f177e02eb647be018f898a39262, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridWidth: 0
-  gridHeight: 0
+  gridWidth: 5
+  gridHeight: 5
   nodes:
   - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
-  - {fileID: 11400000, guid: 17e745163b16eea44b4088f703278d92, type: 2}
-  - {fileID: 11400000, guid: ad55fb29e7003e24aa7e92b0f99dd961, type: 2}
-  - {fileID: 11400000, guid: e3c192fa618028b409abd428f6e415b5, type: 2}
+  - {fileID: 11400000, guid: 58e7fb84c0ae4a746bcb57c437a8921a, type: 2}
+  - {fileID: 11400000, guid: 5a26fd7ebb7f958438f97634a94e7f9b, type: 2}
+  - {fileID: 11400000, guid: 3bf2ef38ab8d91e498386e6593381dbd, type: 2}
+  - {fileID: 11400000, guid: 357a30f8c14060842b5d8f7059f57dcc, type: 2}
+  - {fileID: 11400000, guid: 41e6a8fcefb4d1145bdb2747df58c7d3, type: 2}
+  - {fileID: 11400000, guid: 7f4cf7dd5b847fc4d86460aaf0fac442, type: 2}
+  - {fileID: 11400000, guid: f5209bf73db3c874d938b9e96cb1e63d, type: 2}
+  - {fileID: 11400000, guid: 7fb1fe069883d9d4294525373a63cc9f, type: 2}
+  - {fileID: 11400000, guid: 6fd0bba49ac88af4591a2be748e358ef, type: 2}
+  - {fileID: 11400000, guid: 83fcb32e3d10bd04da17f197703c21f3, type: 2}
+  - {fileID: 11400000, guid: 99930485b6bbf9f44827e21fbda7dd26, type: 2}
+  - {fileID: 11400000, guid: 4fd3f01f2683e304db2223b3cc9510be, type: 2}
 --- !u!4 &1936370414
 Transform:
   m_ObjectHideFlags: 0
@@ -524,5 +479,4 @@ SceneRoots:
   - {fileID: 705507995}
   - {fileID: 866362583}
   - {fileID: 122850602}
-  - {fileID: 865360808}
   - {fileID: 1936370414}

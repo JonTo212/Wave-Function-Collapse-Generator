@@ -12,13 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bc46165eba60a5478fe6a53ec634dcd, type: 3}
   m_Name: URCornerNode
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
+  prefab: {fileID: 1303821596382928437, guid: 7908f2fd1068c20428b307c3e9ad77bd, type: 3}
   weight: 0
   viableTopNodes:
     compatibleNodes: []
   viableBottomNodes:
-    compatibleNodes: []
+    compatibleNodes:
+    - {fileID: 11400000, guid: 7fb1fe069883d9d4294525373a63cc9f, type: 2}
+    - {fileID: 11400000, guid: f5209bf73db3c874d938b9e96cb1e63d, type: 2}
   viableLeftNodes:
-    compatibleNodes: []
+    compatibleNodes:
+    - {fileID: 11400000, guid: 4fd3f01f2683e304db2223b3cc9510be, type: 2}
+    - {fileID: 11400000, guid: 6fd0bba49ac88af4591a2be748e358ef, type: 2}
   viableRightNodes:
     compatibleNodes: []
