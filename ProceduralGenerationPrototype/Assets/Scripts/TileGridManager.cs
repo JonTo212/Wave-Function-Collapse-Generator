@@ -33,7 +33,6 @@ public class TileGridManager : MonoBehaviour
                 grid[x, y] = newTile;
             }
         }
-
     }
 
     private void WaveFunctionCollapse()
