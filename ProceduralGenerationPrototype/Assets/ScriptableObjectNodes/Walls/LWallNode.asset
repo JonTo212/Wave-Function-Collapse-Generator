@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: LWallNode
   m_EditorClassIdentifier: 
   prefab: {fileID: 5049310047659339170, guid: 56faab4f564431b40bc0d5321df5deeb, type: 3}
-  instantiatedObject: {fileID: 0}
   weight: 0
   viableTopNodes:
     compatibleNodes:
@@ -26,8 +25,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 3bf2ef38ab8d91e498386e6593381dbd, type: 2}
     - {fileID: 11400000, guid: 357a30f8c14060842b5d8f7059f57dcc, type: 2}
   viableLeftNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
+    compatibleNodes: []
   viableRightNodes:
     compatibleNodes:
     - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
