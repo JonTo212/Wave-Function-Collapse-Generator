@@ -440,8 +440,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 719a9f177e02eb647be018f898a39262, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridWidth: 5
-  gridHeight: 5
+  gridWidth: 3
+  gridHeight: 3
+  gridDepth: 3
   nodes:
   - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
   - {fileID: 11400000, guid: 58e7fb84c0ae4a746bcb57c437a8921a, type: 2}
@@ -456,6 +457,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 83fcb32e3d10bd04da17f197703c21f3, type: 2}
   - {fileID: 11400000, guid: 99930485b6bbf9f44827e21fbda7dd26, type: 2}
   - {fileID: 11400000, guid: 4fd3f01f2683e304db2223b3cc9510be, type: 2}
+  - {fileID: 11400000, guid: 8db8722efd960a2478cf2241a811fbf2, type: 2}
+  - {fileID: 11400000, guid: 496571af7ebc51c4da64c840fe344985, type: 2}
 --- !u!4 &1936370414
 Transform:
   m_ObjectHideFlags: 0

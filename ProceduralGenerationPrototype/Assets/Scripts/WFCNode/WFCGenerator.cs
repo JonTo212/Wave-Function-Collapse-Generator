@@ -147,7 +147,7 @@ public class WFCGenerator : MonoBehaviour
             if (potentialNodes.Count < 1) //no possible tiles based on constraints -> this can be changed if desired
             {
                 grid[x, y, z] = nodes[0]; //if no other possibilities, just add a floor
-                //Debug.Log("Attempted to collapse on " + x + ", " + y + " but no compatible tiles.");
+                Debug.Log("Attempted to collapse on " + x + ", " + y + " , " + z + " but no compatible tiles.");
             }
             else
             {

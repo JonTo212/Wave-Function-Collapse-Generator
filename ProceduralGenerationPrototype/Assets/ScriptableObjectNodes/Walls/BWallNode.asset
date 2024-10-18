@@ -16,16 +16,20 @@ MonoBehaviour:
   weight: 0
   viableTopNodes:
     compatibleNodes:
-    - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
+    - {fileID: 11400000, guid: 8db8722efd960a2478cf2241a811fbf2, type: 2}
   viableBottomNodes:
     compatibleNodes: []
   viableLeftNodes:
     compatibleNodes:
-    - {fileID: 11400000}
     - {fileID: 11400000, guid: 3bf2ef38ab8d91e498386e6593381dbd, type: 2}
     - {fileID: 11400000, guid: 58e7fb84c0ae4a746bcb57c437a8921a, type: 2}
+    - {fileID: 11400000, guid: 496571af7ebc51c4da64c840fe344985, type: 2}
   viableRightNodes:
     compatibleNodes:
-    - {fileID: 11400000}
     - {fileID: 11400000, guid: 7f4cf7dd5b847fc4d86460aaf0fac442, type: 2}
     - {fileID: 11400000, guid: 58e7fb84c0ae4a746bcb57c437a8921a, type: 2}
+  viableForwardNodes:
+    compatibleNodes:
+    - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
+  viableBackwardNodes:
+    compatibleNodes: []

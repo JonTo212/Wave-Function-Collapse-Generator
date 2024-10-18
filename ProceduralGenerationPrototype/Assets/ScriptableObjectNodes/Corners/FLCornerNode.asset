@@ -15,16 +15,22 @@ MonoBehaviour:
   prefab: {fileID: 1303821596382928437, guid: 3d9cd84faa5c38c4bb4aecd96d3ac321, type: 3}
   weight: 0
   viableTopNodes:
-    compatibleNodes: []
+    compatibleNodes:
+    - {fileID: 11400000, guid: 8db8722efd960a2478cf2241a811fbf2, type: 2}
   viableBottomNodes:
+    compatibleNodes: []
+  viableLeftNodes:
+    compatibleNodes:
+    - {fileID: 11400000, guid: 496571af7ebc51c4da64c840fe344985, type: 2}
+  viableRightNodes:
+    compatibleNodes:
+    - {fileID: 11400000, guid: 4fd3f01f2683e304db2223b3cc9510be, type: 2}
+    - {fileID: 11400000, guid: 99930485b6bbf9f44827e21fbda7dd26, type: 2}
+    - {fileID: 11400000, guid: 6fd0bba49ac88af4591a2be748e358ef, type: 2}
+  viableForwardNodes:
+    compatibleNodes: []
+  viableBackwardNodes:
     compatibleNodes:
     - {fileID: 11400000, guid: 41e6a8fcefb4d1145bdb2747df58c7d3, type: 2}
     - {fileID: 11400000, guid: 357a30f8c14060842b5d8f7059f57dcc, type: 2}
     - {fileID: 11400000, guid: 3bf2ef38ab8d91e498386e6593381dbd, type: 2}
-  viableLeftNodes:
-    compatibleNodes: []
-  viableRightNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 4fd3f01f2683e304db2223b3cc9510be, type: 2}
-    - {fileID: 11400000, guid: 6fd0bba49ac88af4591a2be748e358ef, type: 2}
-    - {fileID: 11400000, guid: 99930485b6bbf9f44827e21fbda7dd26, type: 2}

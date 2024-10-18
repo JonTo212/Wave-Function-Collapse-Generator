@@ -20,7 +20,7 @@ public class WFCNode : ScriptableObject
     //called when changes happen in editor
     private void OnValidate()
     {
-        AutoRemoveOppositeConnections();
+        //AutoRemoveOppositeConnections(); //Need to find a way to make this work properly
         AutoPopulateOppositeConnections();
     }
 
