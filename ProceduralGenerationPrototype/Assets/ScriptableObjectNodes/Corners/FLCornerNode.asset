@@ -18,10 +18,10 @@ MonoBehaviour:
     compatibleNodes:
     - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
   viableBottomNodes:
-    compatibleNodes: []
-  viableLeftNodes:
     compatibleNodes:
-    - {fileID: 11400000, guid: 496571af7ebc51c4da64c840fe344985, type: 2}
+    - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
+  viableLeftNodes:
+    compatibleNodes: []
   viableRightNodes:
     compatibleNodes:
     - {fileID: 11400000, guid: 4fd3f01f2683e304db2223b3cc9510be, type: 2}
