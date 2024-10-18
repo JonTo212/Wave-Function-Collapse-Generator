@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6179102033784038240}
   m_Layer: 0
-  m_Name: UL Corner
+  m_Name: FL Corner
   m_TagString: WFCNode
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
