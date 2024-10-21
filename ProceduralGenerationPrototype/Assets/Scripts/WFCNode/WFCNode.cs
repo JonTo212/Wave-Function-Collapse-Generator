@@ -7,7 +7,8 @@ using UnityEngine;
 public class WFCNode : ScriptableObject
 {
     public GameObject prefab;
-    //[HideInInspector] public GameObject instantiatedObject; //save object for regeneration -> for some reason this doesn't properly destroy all of them
+    public List<FaceData> faceDataList = new List<FaceData>();
+    public Dictionary<Vector3, string> faces = new Dictionary<Vector3, string>();
     public int weight;
 
     public WFCConnection viableTopNodes;
@@ -17,11 +18,20 @@ public class WFCNode : ScriptableObject
     public WFCConnection viableForwardNodes;
     public WFCConnection viableBackwardNodes;
 
+    public Dictionary<string, List<string>> validFaceConstraints
+    {
+        get { return FaceConstraints.faceConstraints; }
+    }
+
+    private void OnEnable()
+    {
+        PopulateFaceDictionary();
+    }
+
     //called when changes happen in editor
     private void OnValidate()
     {
-        //AutoRemoveOppositeConnections(); //Need to find a way to make this work properly
-        AutoPopulateOppositeConnections();
+        //AutoPopulateOppositeConnections();
     }
 
     //auto-populate the equivalent node
@@ -33,6 +43,10 @@ public class WFCNode : ScriptableObject
             {
                 topNode.viableBottomNodes.compatibleNodes.Add(this);
             }
+            else
+            {
+                topNode.viableBottomNodes.compatibleNodes.Remove(this);
+            }
         }
 
         foreach (var bottomNode in viableBottomNodes.compatibleNodes)
@@ -40,6 +54,10 @@ public class WFCNode : ScriptableObject
             if (!bottomNode.viableTopNodes.compatibleNodes.Contains(this))
             {
                 bottomNode.viableTopNodes.compatibleNodes.Add(this);
+            }
+            else
+            {
+                bottomNode.viableTopNodes.compatibleNodes.Remove(this);
             }
         }
 
@@ -49,6 +67,10 @@ public class WFCNode : ScriptableObject
             {
                 leftNode.viableRightNodes.compatibleNodes.Add(this);
             }
+            else
+            {
+                leftNode.viableRightNodes.compatibleNodes.Remove(this);
+            }
         }
 
         foreach (var rightNode in viableRightNodes.compatibleNodes)
@@ -56,6 +78,10 @@ public class WFCNode : ScriptableObject
             if (!rightNode.viableLeftNodes.compatibleNodes.Contains(this))
             {
                 rightNode.viableLeftNodes.compatibleNodes.Add(this);
+            }
+            else
+            {
+                rightNode.viableLeftNodes.compatibleNodes.Remove(this);
             }
         }
 
@@ -65,6 +91,10 @@ public class WFCNode : ScriptableObject
             {
                 forwardNode.viableBackwardNodes.compatibleNodes.Add(this);
             }
+            else
+            {
+                forwardNode.viableBackwardNodes.compatibleNodes.Remove(this);
+            }
         }
 
         foreach (var backwardNode in viableBackwardNodes.compatibleNodes)
@@ -73,59 +103,27 @@ public class WFCNode : ScriptableObject
             {
                 backwardNode.viableForwardNodes.compatibleNodes.Add(this);
             }
-        }
-    }
-
-    //auto-populate the equivalent node
-    private void AutoRemoveOppositeConnections()
-    {
-        foreach (var topNode in viableTopNodes.compatibleNodes)
-        {
-            if (topNode.viableBottomNodes.compatibleNodes.Contains(this))
-            {
-                topNode.viableBottomNodes.compatibleNodes.Remove(this);
-            }
-        }
-
-        foreach (var bottomNode in viableBottomNodes.compatibleNodes)
-        {
-            if (bottomNode.viableTopNodes.compatibleNodes.Contains(this))
-            {
-                bottomNode.viableTopNodes.compatibleNodes.Remove(this);
-            }
-        }
-
-        foreach (var leftNode in viableLeftNodes.compatibleNodes)
-        {
-            if (leftNode.viableRightNodes.compatibleNodes.Contains(this))
-            {
-                leftNode.viableRightNodes.compatibleNodes.Remove(this);
-            }
-        }
-
-        foreach (var rightNode in viableRightNodes.compatibleNodes)
-        {
-            if (rightNode.viableLeftNodes.compatibleNodes.Contains(this))
-            {
-                rightNode.viableLeftNodes.compatibleNodes.Remove(this);
-            }
-        }
-
-        foreach (var forwardNode in viableForwardNodes.compatibleNodes)
-        {
-            if (forwardNode.viableBackwardNodes.compatibleNodes.Contains(this))
-            {
-                forwardNode.viableBackwardNodes.compatibleNodes.Remove(this);
-            }
-        }
-
-        foreach (var backwardNode in viableBackwardNodes.compatibleNodes)
-        {
-            if (backwardNode.viableForwardNodes.compatibleNodes.Contains(this))
+            else
             {
                 backwardNode.viableForwardNodes.compatibleNodes.Remove(this);
             }
         }
+    }
+
+    public void PopulateFaceDictionary()
+    {
+        if (faces != null)
+        {
+            faces.Clear(); //make sure it's freshly populated
+        }
+
+        //tie each label to a direction
+        faces[Vector3.up] = faceDataList[0].label;
+        faces[Vector3.down] = faceDataList[1].label;     
+        faces[Vector3.left] = faceDataList[2].label;  
+        faces[Vector3.right] = faceDataList[3].label;     
+        faces[Vector3.forward] = faceDataList[4].label;     
+        faces[Vector3.back] = faceDataList[5].label;
     }
 }
 
@@ -133,4 +131,24 @@ public class WFCNode : ScriptableObject
 public class WFCConnection
 {
     public List<WFCNode> compatibleNodes;
+}
+
+[System.Serializable]
+public class FaceData
+{
+    public string label;
+}
+
+public static class FaceConstraints
+{
+    public static Dictionary<string, List<string>> faceConstraints = new Dictionary<string, List<string>>
+    {
+        { "-1", new List<string>() { "3" } },
+        { "0", new List<string>() { "1" } },
+        { "1", new List<string>(){ "1f" } },
+        { "1f", new List<string>() { "1" } },
+        { "2s", new List<string>() { "2s" } },
+        { "3", new List<string>() { "-1" } },
+    };
+
 }

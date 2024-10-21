@@ -13,6 +13,13 @@ MonoBehaviour:
   m_Name: BWallNode
   m_EditorClassIdentifier: 
   prefab: {fileID: 5049310047659339170, guid: 11cb9b258a28b4d4b9260c0321effbc0, type: 3}
+  faceDataList:
+  - label: v1_2
+  - label: 0
+  - label: 1
+  - label: 1f
+  - label: 2s
+  - label: -1
   weight: 0
   viableTopNodes:
     compatibleNodes:
@@ -21,13 +28,10 @@ MonoBehaviour:
     compatibleNodes:
     - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
   viableLeftNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 3bf2ef38ab8d91e498386e6593381dbd, type: 2}
-    - {fileID: 11400000, guid: 58e7fb84c0ae4a746bcb57c437a8921a, type: 2}
+    compatibleNodes: []
   viableRightNodes:
     compatibleNodes:
     - {fileID: 11400000, guid: 7f4cf7dd5b847fc4d86460aaf0fac442, type: 2}
-    - {fileID: 11400000, guid: 58e7fb84c0ae4a746bcb57c437a8921a, type: 2}
   viableForwardNodes:
     compatibleNodes:
     - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}

@@ -13,24 +13,25 @@ MonoBehaviour:
   m_Name: FLCornerNode
   m_EditorClassIdentifier: 
   prefab: {fileID: 1303821596382928437, guid: 3d9cd84faa5c38c4bb4aecd96d3ac321, type: 3}
+  faceDataList:
+  - label: v0_0
+  - label: 0
+  - label: -1
+  - label: 1
+  - label: -1
+  - label: 1f
   weight: 0
   viableTopNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
+    compatibleNodes: []
   viableBottomNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
+    compatibleNodes: []
   viableLeftNodes:
     compatibleNodes: []
   viableRightNodes:
     compatibleNodes:
-    - {fileID: 11400000, guid: 4fd3f01f2683e304db2223b3cc9510be, type: 2}
-    - {fileID: 11400000, guid: 99930485b6bbf9f44827e21fbda7dd26, type: 2}
     - {fileID: 11400000, guid: 6fd0bba49ac88af4591a2be748e358ef, type: 2}
   viableForwardNodes:
     compatibleNodes: []
   viableBackwardNodes:
     compatibleNodes:
-    - {fileID: 11400000, guid: 41e6a8fcefb4d1145bdb2747df58c7d3, type: 2}
     - {fileID: 11400000, guid: 357a30f8c14060842b5d8f7059f57dcc, type: 2}
-    - {fileID: 11400000, guid: 3bf2ef38ab8d91e498386e6593381dbd, type: 2}

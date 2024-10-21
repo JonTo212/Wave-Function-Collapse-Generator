@@ -13,6 +13,13 @@ MonoBehaviour:
   m_Name: RWallNode
   m_EditorClassIdentifier: 
   prefab: {fileID: 5049310047659339170, guid: 3c564a99fe2f3d94889e7ae13a02bde0, type: 3}
+  faceDataList:
+  - label: v1_1
+  - label: 0
+  - label: 2s
+  - label: -1
+  - label: 1f
+  - label: 1
   weight: 0
   viableTopNodes:
     compatibleNodes:
@@ -27,9 +34,8 @@ MonoBehaviour:
     compatibleNodes: []
   viableForwardNodes:
     compatibleNodes:
-    - {fileID: 11400000, guid: 99930485b6bbf9f44827e21fbda7dd26, type: 2}
     - {fileID: 11400000, guid: f5209bf73db3c874d938b9e96cb1e63d, type: 2}
+    - {fileID: 11400000, guid: 99930485b6bbf9f44827e21fbda7dd26, type: 2}
   viableBackwardNodes:
     compatibleNodes:
-    - {fileID: 11400000, guid: 7f4cf7dd5b847fc4d86460aaf0fac442, type: 2}
     - {fileID: 11400000, guid: f5209bf73db3c874d938b9e96cb1e63d, type: 2}

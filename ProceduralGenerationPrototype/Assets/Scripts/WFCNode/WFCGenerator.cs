@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class WFCGenerator : MonoBehaviour
@@ -41,6 +42,28 @@ public class WFCGenerator : MonoBehaviour
         {
             if (!validNodes.Contains(potentialNodes[i]))
             {
+                potentialNodes.RemoveAt(i);
+            }
+        }
+    }
+
+    private void ReducePossibleNodesBasedOnLabel(List<WFCNode> potentialNodes, WFCNode neighbourNode, Vector3 currentFace, Vector3 oppositeFace)
+    {
+        for (int i = potentialNodes.Count - 1; i >= 0; i--) //start at the end of the list so that it doesn't skip over nodes as they're being removed
+        {
+            string neighbourFace = neighbourNode.faces[oppositeFace];
+            //List<string> viableFaces = neighbourNode.validFaceConstraints[neighbourFace];
+
+            if (neighbourNode.validFaceConstraints.TryGetValue(neighbourFace, out List<string> viableFaces)) //check constraints dictionary
+            {
+                if (!viableFaces.Contains(potentialNodes[i].faces[currentFace]))
+                {
+                    potentialNodes.RemoveAt(i);
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"Face '{neighbourFace}' not found in validFaceConstraints.");
                 potentialNodes.RemoveAt(i);
             }
         }
@@ -121,6 +144,7 @@ public class WFCGenerator : MonoBehaviour
                     if (neighbourNode != null) //if the neighbour node is null, it needs to be collapsed still
                     {
 
+                        /*
                         WFCConnection[] connections = new WFCConnection[]
                         {
                             neighbourNode.viableBottomNodes,   // index 0 = top node, so the corresponding nodes to check are viable bottom nodes
@@ -132,6 +156,10 @@ public class WFCGenerator : MonoBehaviour
                         };
 
                         ReducePossibleNodes(potentialNodes, connections[i].compatibleNodes); //reduce possible nodes for this tile
+                        */
+
+                        Vector3 dir = neighbourCoordinates[i];
+                        ReducePossibleNodesBasedOnLabel(potentialNodes, neighbourNode, dir, -dir);
 
                     }
                     else
@@ -147,7 +175,7 @@ public class WFCGenerator : MonoBehaviour
             if (potentialNodes.Count < 1) //no possible tiles based on constraints -> this can be changed if desired
             {
                 grid[x, y, z] = nodes[0]; //if no other possibilities, just add a floor
-                Debug.Log("Attempted to collapse on " + x + ", " + y + " , " + z + " but no compatible tiles.");
+                //Debug.Log("Attempted to collapse on " + x + ", " + y + " , " + z + " but no compatible tiles.");
             }
             else
             {

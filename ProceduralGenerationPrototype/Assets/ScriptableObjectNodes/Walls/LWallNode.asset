@@ -13,6 +13,13 @@ MonoBehaviour:
   m_Name: LWallNode
   m_EditorClassIdentifier: 
   prefab: {fileID: 5049310047659339170, guid: 56faab4f564431b40bc0d5321df5deeb, type: 3}
+  faceDataList:
+  - label: v1_3
+  - label: 0
+  - label: -1
+  - label: 2s
+  - label: 1
+  - label: 1f
   weight: 0
   viableTopNodes:
     compatibleNodes:
@@ -31,5 +38,5 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 357a30f8c14060842b5d8f7059f57dcc, type: 2}
   viableBackwardNodes:
     compatibleNodes:
-    - {fileID: 11400000, guid: 3bf2ef38ab8d91e498386e6593381dbd, type: 2}
     - {fileID: 11400000, guid: 357a30f8c14060842b5d8f7059f57dcc, type: 2}
+    - {fileID: 11400000, guid: 3bf2ef38ab8d91e498386e6593381dbd, type: 2}

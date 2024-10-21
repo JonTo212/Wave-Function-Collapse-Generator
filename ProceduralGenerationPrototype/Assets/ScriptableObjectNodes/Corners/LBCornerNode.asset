@@ -13,23 +13,26 @@ MonoBehaviour:
   m_Name: LBCornerNode
   m_EditorClassIdentifier: 
   prefab: {fileID: 1303821596382928437, guid: 1c70ecdd3dde55246a4872115d936761, type: 3}
+  faceDataList:
+  - label: v0_2
+  - label: 0
+  - label: -1
+  - label: 1f
+  - label: 1
+  - label: -1
   weight: 0
   viableTopNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
+    compatibleNodes: []
   viableBottomNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
+    compatibleNodes: []
   viableLeftNodes:
     compatibleNodes: []
   viableRightNodes:
     compatibleNodes:
     - {fileID: 11400000, guid: 5a26fd7ebb7f958438f97634a94e7f9b, type: 2}
     - {fileID: 11400000, guid: 58e7fb84c0ae4a746bcb57c437a8921a, type: 2}
-    - {fileID: 11400000, guid: 7f4cf7dd5b847fc4d86460aaf0fac442, type: 2}
   viableForwardNodes:
     compatibleNodes:
-    - {fileID: 11400000, guid: 83fcb32e3d10bd04da17f197703c21f3, type: 2}
     - {fileID: 11400000, guid: 41e6a8fcefb4d1145bdb2747df58c7d3, type: 2}
     - {fileID: 11400000, guid: 357a30f8c14060842b5d8f7059f57dcc, type: 2}
   viableBackwardNodes:
