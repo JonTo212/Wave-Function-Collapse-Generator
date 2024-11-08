@@ -18,6 +18,12 @@ public class Editor_WFCGenerator : Editor
             ClearLog();
             script.Regenerate();
         }
+
+        if(GUILayout.Button("Expand"))
+        {
+            ClearLog();
+            script.Expand();
+        }
     }
 
     public void ClearLog()

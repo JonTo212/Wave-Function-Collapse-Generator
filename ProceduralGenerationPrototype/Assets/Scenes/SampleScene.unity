@@ -440,9 +440,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 719a9f177e02eb647be018f898a39262, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridWidth: 1
+  gridWidth: 10
   gridHeight: 1
-  gridDepth: 2
+  gridDepth: 10
   nodes:
   - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
   - {fileID: 11400000, guid: 5a26fd7ebb7f958438f97634a94e7f9b, type: 2}

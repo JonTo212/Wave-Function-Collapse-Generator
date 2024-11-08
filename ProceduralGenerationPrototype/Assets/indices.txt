@@ -1,0 +1,13 @@
+0 = up
+1 = down
+2 = left
+3 = right
+4 = forward
+5 = backward
+
+-1 = wall
+0 = floor face
+1 = wall on right
+1f = wall on left
+2s = floor side
+3 = empty
