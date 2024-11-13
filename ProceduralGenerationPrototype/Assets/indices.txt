@@ -9,5 +9,15 @@
 0 = floor face
 1 = wall on right
 1f = wall on left
+1nf = wall on right (no floor)
+1fnf = wall on left (no floor)
 2s = floor side
 3 = empty
+4_1 = wall on back (no floor)
+4_2 = wall on front (no floor)
+4_3 = wall on left (no floor)
+4_4 = wall on right (no floor)
+5_1 = wall on front/left (no floor)
+5_2 = wall on front/right (no floor)
+5_3 = wall on back/left (no floor)
+5_4 = wall on back/right (no floor)

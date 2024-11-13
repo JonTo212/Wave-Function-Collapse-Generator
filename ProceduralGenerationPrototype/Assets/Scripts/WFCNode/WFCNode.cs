@@ -149,6 +149,14 @@ public static class FaceConstraints
         { "1f", new List<string>() { "1" } },
         { "2s", new List<string>() { "2s" } },
         { "3", new List<string>() { "-1" } },
+        { "4_1", new List<string>() { "4_1" } },
+        { "4_2", new List<string>() { "4_2" } },
+        { "4_3", new List<string>() { "4_3" } },
+        { "4_4", new List<string>() { "4_4" } },
+        { "5_1", new List<string>() { "5_1" } },
+        { "5_2", new List<string>() { "5_2" } },
+        { "5_3", new List<string>() { "5_3" } },
+        { "5_4", new List<string>() { "5_4" } }
     };
 
 }

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 1303821596382928437, guid: 1c70ecdd3dde55246a4872115d936761, type: 3}
   faceDataList:
-  - label: v0_2
+  - label: 5_3
   - label: 0
   - label: -1
   - label: 1f
