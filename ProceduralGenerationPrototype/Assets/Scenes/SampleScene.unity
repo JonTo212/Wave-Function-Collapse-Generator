@@ -441,10 +441,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridWidth: 5
-  gridHeight: 1
+  gridHeight: 3
   gridDepth: 5
   groundNodes:
-  - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
   - {fileID: 11400000, guid: 83fcb32e3d10bd04da17f197703c21f3, type: 2}
   - {fileID: 11400000, guid: 99930485b6bbf9f44827e21fbda7dd26, type: 2}
   - {fileID: 11400000, guid: 3bf2ef38ab8d91e498386e6593381dbd, type: 2}
@@ -467,6 +466,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ef05a66907c335640a1e5a765cdec952, type: 2}
   - {fileID: 11400000, guid: 44f1dc65281ec2a418b90271cdf7c379, type: 2}
   emptyNode: {fileID: 11400000, guid: 83e47585e749f5742a12287c04921c4f, type: 2}
+  floorNode: {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
 --- !u!4 &1936370414
 Transform:
   m_ObjectHideFlags: 0
