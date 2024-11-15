@@ -166,7 +166,7 @@ public static class FaceConstraints
 
 
         { "-", new List<string>() { "Floor" } },
-        { "Empty", new List<string>() { "Wall", "Empty", "Floor" } },
+        { "Empty", new List<string>() { "Wall", "Empty", "Floor", "FloorSide" } },
         { "Floor", new List<string>() { "-" } },
         { "FloorSide", new List<string>() { "FloorSide" } },
         { "Wall", new List<string>() { "Empty", "FloorSide" } },
@@ -176,10 +176,10 @@ public static class FaceConstraints
         { "WallOnLeftNF", new List<string>() { "WallOnRightNF" } },
         { "CornerRight", new List<string>() { "WallOnLeft" } },
         { "CornerLeft", new List<string>() { "WallOnRight" } },
-        { "FLCorner", new List<string>() { "FLCorner" } },
-        { "FRCorner", new List<string>() { "FRCorner" } },
-        { "LBCorner", new List<string>() { "LBCorner" } },
-        { "RBCorner", new List<string>() { "RBCorner" } },
+        { "FLCorner", new List<string>() { "FLCorner", "Floor" } },
+        { "FRCorner", new List<string>() { "FRCorner", "Floor" } },
+        { "LBCorner", new List<string>() { "LBCorner", "Floor" } },
+        { "RBCorner", new List<string>() { "RBCorner", "Floor" } },
         { "BWall", new List<string>() { "BWall" } },
         { "FWall", new List<string>() { "FWall" } },
         { "LWall", new List<string>() { "LWall" } },

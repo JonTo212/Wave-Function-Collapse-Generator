@@ -17,6 +17,7 @@ public class WFCGenerator : MonoBehaviour
     [SerializeField] private List<WFCNode> groundNodes;              //list of all ground nodes
     [SerializeField] private List<WFCNode> airNodes;                 //list of all air nodes
     [SerializeField] private WFCNode emptyNode;
+    [SerializeField] private WFCNode floorNode;
     private List<Vector3Int> toCollapse = new List<Vector3Int>();    //list of nodes that still need to be collapsed
 
     private Vector3Int[] neighbourCoordinates = new Vector3Int[]
@@ -190,15 +191,22 @@ public class WFCGenerator : MonoBehaviour
 
             List<WFCNode> potentialNodes = new List<WFCNode>();
 
-            if (gridHeight > 1)
+            if (y == 0)
             {
-                //potentialNodes.AddRange(airNodes);
                 potentialNodes.AddRange(groundNodes);
-                potentialNodes.Add(emptyNode);
+                potentialNodes.Add(floorNode);
             }
+            /*else if(y == gridHeight - 1)
+            {
+                potentialNodes.AddRange(airNodes);
+                potentialNodes.Add(floorNode);
+            }*/
             else
             {
+                potentialNodes.AddRange(airNodes);
                 potentialNodes.AddRange(groundNodes);
+                potentialNodes.Add(floorNode);
+                //potentialNodes.Add(emptyNode);
             }
 
             for (int i = 0; i < neighbourCoordinates.Length; i++) //loop through all neighbours (i.e. up, down, left, right)
@@ -244,7 +252,7 @@ public class WFCGenerator : MonoBehaviour
 
             if (potentialNodes.Count < 1) //no possible tiles based on constraints -> this can be changed if desired
             {
-                grid[x, y, z] = groundNodes[0]; //if no other possibilities, add an empty slot
+                grid[x, y, z] = floorNode; //if no other possibilities, add a floor
                 broken = true;
             }
             else
