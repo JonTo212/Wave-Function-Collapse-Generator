@@ -24,6 +24,12 @@ public class Editor_WFCGenerator : Editor
             ClearLog();
             script.Expand();
         }
+
+        if (GUILayout.Button("Destroy"))
+        {
+            ClearLog();
+            script.DestroyGrid();
+        }
     }
 
     public void ClearLog()

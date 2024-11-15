@@ -14,7 +14,9 @@ public class WFCGenerator : MonoBehaviour
 
     [Header("Node Parameters")]
 
-    [SerializeField] private List<WFCNode> nodes;                    //list of all nodes
+    [SerializeField] private List<WFCNode> groundNodes;              //list of all ground nodes
+    [SerializeField] private List<WFCNode> airNodes;                 //list of all air nodes
+    [SerializeField] private WFCNode emptyNode;
     private List<Vector3Int> toCollapse = new List<Vector3Int>();    //list of nodes that still need to be collapsed
 
     private Vector3Int[] neighbourCoordinates = new Vector3Int[]
@@ -90,12 +92,12 @@ public class WFCGenerator : MonoBehaviour
 
     #region Regenerate function
 
-    private void DestroyGrid() //for regenerating -> for some reason using node.instantiatedObject doesn't destroy everything
+    public void DestroyGrid() //for regenerating -> for some reason using node.instantiatedObject doesn't destroy everything
     {
         GameObject[] instantiatedObjects = GameObject.FindGameObjectsWithTag("WFCNode");
         foreach (GameObject go in instantiatedObjects)
         {
-            Destroy(go);
+            DestroyImmediate(go);
         }
     }
 
@@ -108,8 +110,58 @@ public class WFCGenerator : MonoBehaviour
 
     public void Expand()
     {
+        int newWidth = gridWidth + 1;
+        int newHeight = gridHeight + 1;
+        int newDepth = gridDepth + 1;
 
+        // Step 2: Create a new grid with updated dimensions
+        WFCNode[,,] newGrid = new WFCNode[newWidth, newHeight, newDepth];
+
+        // Step 3: Copy the existing grid into the new grid
+        for (int x = 0; x < gridWidth; x++)
+        {
+            for (int y = 0; y < gridHeight; y++)
+            {
+                for (int z = 0; z < gridDepth; z++)
+                {
+                    newGrid[x, y, z] = grid[x, y, z];
+                }
+            }
+        }
+
+        for (int x = 0; x < newWidth; x++)
+        {
+            for (int y = 0; y < newHeight; y++)
+            {
+                for (int z = 0; z < newDepth; z++)
+                {
+                    // Create the new position in the expanded grid
+                    Vector3Int newPos = new Vector3Int(x, y, z);
+
+                    // Check if the current position is beyond the original grid size
+                    if (x > gridWidth || y > gridHeight || z > gridDepth)
+                    {
+                        // Set the new position in the new grid to null (or default state)
+                        newGrid[x, y, z] = null;
+
+                        // Add the new position to the list of cells to collapse
+                        toCollapse.Add(newPos);
+                    }
+                }
+            }
+        }
+
+
+        // Step 5: Assign the new grid and updated dimensions back to the original variables
+        grid = newGrid;
+        gridWidth = newWidth;
+        gridHeight = newHeight;
+        gridDepth = newDepth;
+
+        // Step 6: Collapse the newly added nodes
+        CollapseGrid(); // CollapseGrid could be modified to only collapse nodes in `toCollapse`
     }
+
 
     #endregion
 
@@ -136,7 +188,18 @@ public class WFCGenerator : MonoBehaviour
             int y = toCollapse[0].y;
             int z = toCollapse[0].z;
 
-            List<WFCNode> potentialNodes = new List<WFCNode>(nodes); //create a new list with all of the nodes to begin with
+            List<WFCNode> potentialNodes = new List<WFCNode>();
+
+            if (gridHeight > 1)
+            {
+                //potentialNodes.AddRange(airNodes);
+                potentialNodes.AddRange(groundNodes);
+                potentialNodes.Add(emptyNode);
+            }
+            else
+            {
+                potentialNodes.AddRange(groundNodes);
+            }
 
             for (int i = 0; i < neighbourCoordinates.Length; i++) //loop through all neighbours (i.e. up, down, left, right)
             {
@@ -177,10 +240,12 @@ public class WFCGenerator : MonoBehaviour
                 }
             }
 
+            bool broken = false;
+
             if (potentialNodes.Count < 1) //no possible tiles based on constraints -> this can be changed if desired
             {
-                grid[x, y, z] = nodes[9]; //if no other possibilities, just add a floor
-                Debug.Log("Attempted to collapse on " + x + ", " + y + " , " + z + " but no compatible tiles.");
+                grid[x, y, z] = groundNodes[0]; //if no other possibilities, add an empty slot
+                broken = true;
             }
             else
             {
@@ -189,6 +254,11 @@ public class WFCGenerator : MonoBehaviour
             }
 
             GameObject newNode = Instantiate(grid[x, y, z].prefab, new Vector3(x, y, z), Quaternion.identity);
+            
+            if(broken)
+            {
+                newNode.name = $"{x}, {y}, {z}, broken";
+            }
             //grid[x, y].instantiatedObject = newNode; //for some reason this doesn't work
             toCollapse.RemoveAt(0);
         }

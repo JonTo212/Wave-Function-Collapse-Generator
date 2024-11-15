@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4bc46165eba60a5478fe6a53ec634dcd, type: 3}
-  m_Name: LBCornerNode NF
+  m_Name: FLCornerNode Piece
   m_EditorClassIdentifier: 
-  prefab: {fileID: 1303821596382928437, guid: 3d3a943dadd615c4bab7d21e9a517129, type: 3}
+  prefab: {fileID: 1303821596382928437, guid: 7f7e2257cdc50904e8ef12ab6027ff61, type: 3}
   faceDataList:
-  - label: LBCorner
-  - label: LBCorner
-  - label: Wall
-  - label: WallOnLeftNF
-  - label: WallOnRightNF
-  - label: Wall
+  - label: '-'
+  - label: Floor
+  - label: CornerLeft
+  - label: FloorSide
+  - label: CornerRight
+  - label: FloorSide
   weight: 0
   viableTopNodes:
     compatibleNodes: []
@@ -29,11 +29,9 @@ MonoBehaviour:
     compatibleNodes: []
   viableRightNodes:
     compatibleNodes:
-    - {fileID: 11400000, guid: 5a26fd7ebb7f958438f97634a94e7f9b, type: 2}
-    - {fileID: 11400000, guid: 58e7fb84c0ae4a746bcb57c437a8921a, type: 2}
+    - {fileID: 11400000, guid: 6fd0bba49ac88af4591a2be748e358ef, type: 2}
   viableForwardNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 41e6a8fcefb4d1145bdb2747df58c7d3, type: 2}
-    - {fileID: 11400000, guid: 357a30f8c14060842b5d8f7059f57dcc, type: 2}
-  viableBackwardNodes:
     compatibleNodes: []
+  viableBackwardNodes:
+    compatibleNodes:
+    - {fileID: 11400000, guid: 357a30f8c14060842b5d8f7059f57dcc, type: 2}

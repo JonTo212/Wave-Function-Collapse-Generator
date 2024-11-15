@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4bc46165eba60a5478fe6a53ec634dcd, type: 3}
-  m_Name: LBCornerNode NF
+  m_Name: LBCornerNode Piece
   m_EditorClassIdentifier: 
-  prefab: {fileID: 1303821596382928437, guid: 3d3a943dadd615c4bab7d21e9a517129, type: 3}
+  prefab: {fileID: 1303821596382928437, guid: f31ca61b727f03c4daf64814a2a2cd19, type: 3}
   faceDataList:
-  - label: LBCorner
-  - label: LBCorner
-  - label: Wall
-  - label: WallOnLeftNF
-  - label: WallOnRightNF
-  - label: Wall
+  - label: '-'
+  - label: Floor
+  - label: CornerRight
+  - label: FloorSide
+  - label: FloorSide
+  - label: CornerLeft
   weight: 0
   viableTopNodes:
     compatibleNodes: []

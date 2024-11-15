@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 1303821596382928437, guid: 3d9cd84faa5c38c4bb4aecd96d3ac321, type: 3}
   faceDataList:
-  - label: 5_1
-  - label: 0
-  - label: -1
-  - label: 1
-  - label: -1
-  - label: 1f
+  - label: FLCorner
+  - label: Floor
+  - label: Wall
+  - label: WallOnRight
+  - label: Wall
+  - label: WallOnLeft
   weight: 0
   viableTopNodes:
     compatibleNodes: []

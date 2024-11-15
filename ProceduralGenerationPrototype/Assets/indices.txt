@@ -6,13 +6,16 @@
 5 = backward
 
 -1 = wall
+-1d = door
 0 = floor face
 1 = wall on right
 1f = wall on left
+1d = door on right
 1nf = wall on right (no floor)
 1fnf = wall on left (no floor)
 2s = floor side
 3 = empty
+3s = empty (no floor)
 4_1 = wall on back (no floor)
 4_2 = wall on front (no floor)
 4_3 = wall on left (no floor)
