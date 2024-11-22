@@ -39,54 +39,15 @@ public class WFCGenerator : MonoBehaviour
            gridPos.z >= 0 && gridPos.z < gridDepth;
     }
 
-    private void ReducePossibleNodes(List<WFCNode> potentialNodes, List<WFCNode> validNodes) //remove all nodes that are invalid
+    private void ReducePossibleNodes(List<WFCNode> potentialNodes, WFCNode neighbourNode, Vector3 direction)
     {
         for (int i = potentialNodes.Count - 1; i >= 0; i--) //start at the end of the list so that it doesn't skip over nodes as they're being removed
         {
-            if (!validNodes.Contains(potentialNodes[i]))
+            if (!neighbourNode.validNodeDictionary[-direction].Contains(potentialNodes[i].prefabName))
             {
                 potentialNodes.RemoveAt(i);
             }
         }
-    }
-
-    private void ReducePossibleNodesBasedOnLabel(List<WFCNode> potentialNodes, WFCNode neighbourNode, Vector3 currentFace, Vector3 oppositeFace)
-    {
-        for (int i = potentialNodes.Count - 1; i >= 0; i--) //start at the end of the list so that it doesn't skip over nodes as they're being removed
-        {
-            string neighbourFace = neighbourNode.faces[oppositeFace];
-            //List<string> viableFaces = neighbourNode.validFaceConstraints[neighbourFace];
-
-            if (neighbourNode.validFaceConstraints.TryGetValue(neighbourFace, out List<string> viableFaces)) //check constraints dictionary
-            {
-                if (!viableFaces.Contains(potentialNodes[i].faces[currentFace]))
-                {
-                    potentialNodes.RemoveAt(i);
-                }
-            }
-            else
-            {
-                Debug.LogWarning($"Face '{neighbourFace}' not found in validFaceConstraints.");
-                potentialNodes.RemoveAt(i);
-            }
-        }
-    }
-
-    private WFCNode GetHighestWeightNode(List<WFCNode> potentialNodes)
-    {
-        WFCNode highestWeightedNode = potentialNodes[0];
-        int highestWeight = highestWeightedNode.weight;
-
-        for (int i = 1; i < potentialNodes.Count; i++) //loop through all potential nodes, starting with the first, updating weight and corresponding node each time
-        {
-            if (potentialNodes[i].weight > highestWeight)
-            {
-                highestWeight = potentialNodes[i].weight;
-                highestWeightedNode = potentialNodes[i];
-            }
-        }
-
-        return highestWeightedNode;
     }
 
     #endregion
@@ -195,6 +156,7 @@ public class WFCGenerator : MonoBehaviour
             {
                 potentialNodes.AddRange(groundNodes);
                 potentialNodes.Add(floorNode);
+                potentialNodes.Add(emptyNode);
             }
             /*else if(y == gridHeight - 1)
             {
@@ -206,7 +168,7 @@ public class WFCGenerator : MonoBehaviour
                 potentialNodes.AddRange(airNodes);
                 potentialNodes.AddRange(groundNodes);
                 potentialNodes.Add(floorNode);
-                //potentialNodes.Add(emptyNode);
+                potentialNodes.Add(emptyNode);
             }
 
             for (int i = 0; i < neighbourCoordinates.Length; i++) //loop through all neighbours (i.e. up, down, left, right)
@@ -220,22 +182,8 @@ public class WFCGenerator : MonoBehaviour
                     if (neighbourNode != null) //if the neighbour node is null, it needs to be collapsed still
                     {
 
-                        /*
-                        WFCConnection[] connections = new WFCConnection[]
-                        {
-                            neighbourNode.viableBottomNodes,   // index 0 = top node, so the corresponding nodes to check are viable bottom nodes
-                            neighbourNode.viableTopNodes,      // index 1 = bottom node, so the corresponding nodes to check are viable top nodes
-                            neighbourNode.viableRightNodes,    // index 2 = left node, so the corresponding nodes to check are viable right nodes
-                            neighbourNode.viableLeftNodes,     // index 3 = right node, so the corresponding nodes to check are viable left nodes
-                            neighbourNode.viableBackwardNodes, // index 4 = forward node, so the corresponding nodes to check are viable back nodes
-                            neighbourNode.viableForwardNodes   // index 5 = backward node, so the corresponding nodes to check are viable forward nodes
-                        };
-
-                        ReducePossibleNodes(potentialNodes, connections[i].compatibleNodes); //reduce possible nodes for this tile
-                        */
-
                         Vector3 dir = neighbourCoordinates[i];
-                        ReducePossibleNodesBasedOnLabel(potentialNodes, neighbourNode, dir, -dir);
+                        ReducePossibleNodes(potentialNodes, neighbourNode, dir); //reduce possible nodes for this tile
 
                     }
                     else
@@ -258,7 +206,6 @@ public class WFCGenerator : MonoBehaviour
             else
             {
                 grid[x, y, z] = potentialNodes[Random.Range(0, potentialNodes.Count)]; //choose random node
-                //grid[x, y] = GetHighestWeightNode(potentialNodes); //choose the highest weighted node
             }
 
             GameObject newNode = Instantiate(grid[x, y, z].prefab, new Vector3(x, y, z), Quaternion.identity);
@@ -267,7 +214,6 @@ public class WFCGenerator : MonoBehaviour
             {
                 newNode.name = $"{x}, {y}, {z}, broken";
             }
-            //grid[x, y].instantiatedObject = newNode; //for some reason this doesn't work
             toCollapse.RemoveAt(0);
         }
     }

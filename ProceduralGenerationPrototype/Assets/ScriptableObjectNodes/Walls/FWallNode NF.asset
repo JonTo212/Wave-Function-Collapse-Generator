@@ -12,29 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bc46165eba60a5478fe6a53ec634dcd, type: 3}
   m_Name: FWallNode NF
   m_EditorClassIdentifier: 
+  prefabName: FWallNF
   prefab: {fileID: 5049310047659339170, guid: 8ff92dde6bb03144f814061c8c2c14c7, type: 3}
-  faceDataList:
-  - label: FWall
-  - label: FWall
-  - label: WallOnLeftNF
-  - label: WallOnRightNF
-  - label: Wall
-  - label: Empty
-  weight: 0
-  viableTopNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
-  viableBottomNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
-  viableLeftNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 83fcb32e3d10bd04da17f197703c21f3, type: 2}
-  viableRightNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 99930485b6bbf9f44827e21fbda7dd26, type: 2}
-  viableForwardNodes:
-    compatibleNodes: []
-  viableBackwardNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
+  nodeDataList:
+  - validNodes:
+    - Floor
+    - FWallNF
+  - validNodes:
+    - FWallNF
+    - FWall
+  - validNodes:
+    - FWallNF
+    - FLCornerNF
+  - validNodes:
+    - FWallNF
+    - FRCornerNF
+  - validNodes:
+    - Empty
+  - validNodes:
+    - Empty
+    - BWallNF

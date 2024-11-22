@@ -12,24 +12,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bc46165eba60a5478fe6a53ec634dcd, type: 3}
   m_Name: Empty
   m_EditorClassIdentifier: 
+  prefabName: Empty
   prefab: {fileID: 745449460276910111, guid: d0862d4917312b44cac32439c221e370, type: 3}
-  faceDataList:
-  - label: Empty
-  - label: Empty
-  - label: Empty
-  - label: Empty
-  - label: Empty
-  - label: Empty
-  weight: 0
-  viableTopNodes:
-    compatibleNodes: []
-  viableBottomNodes:
-    compatibleNodes: []
-  viableLeftNodes:
-    compatibleNodes: []
-  viableRightNodes:
-    compatibleNodes: []
-  viableForwardNodes:
-    compatibleNodes: []
-  viableBackwardNodes:
-    compatibleNodes: []
+  nodeDataList:
+  - validNodes:
+    - Empty
+    - Floor
+    - FLCorner
+    - FRCorner
+    - LBCorner
+    - RBCorner
+    - BWall
+    - FWall
+    - RWall
+    - LWall
+  - validNodes:
+    - Floor
+    - Empty
+  - validNodes:
+    - RWall
+    - FRCorner
+    - RBCorner
+    - Empty
+    - LWallNF
+    - FRCornerNF
+    - RBCornerNF
+  - validNodes:
+    - LWall
+    - LRCorner
+    - LBCorner
+    - Empty
+    - RWallNF
+    - LRCornerNF
+    - LBCornerNF
+  - validNodes:
+    - BWall
+    - LBCorner
+    - RBCorner
+    - Empty
+    - FWallNF
+    - LBCornerNF
+    - RBCornerNF
+  - validNodes:
+    - FWall
+    - FRCorner
+    - FLCorner
+    - Empty
+    - BWallNF
+    - FLCornerNF
+    - FRCornerNF

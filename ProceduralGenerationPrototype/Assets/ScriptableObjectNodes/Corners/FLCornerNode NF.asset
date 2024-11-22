@@ -12,26 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bc46165eba60a5478fe6a53ec634dcd, type: 3}
   m_Name: FLCornerNode NF
   m_EditorClassIdentifier: 
+  prefabName: FLCornerNF
   prefab: {fileID: 1303821596382928437, guid: 4ac4766d8341c214da47d0a2847491fc, type: 3}
-  faceDataList:
-  - label: FLCorner
-  - label: FLCorner
-  - label: Wall
-  - label: WallOnRightNF
-  - label: Wall
-  - label: WallOnLeftNF
-  weight: 0
-  viableTopNodes:
-    compatibleNodes: []
-  viableBottomNodes:
-    compatibleNodes: []
-  viableLeftNodes:
-    compatibleNodes: []
-  viableRightNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 6fd0bba49ac88af4591a2be748e358ef, type: 2}
-  viableForwardNodes:
-    compatibleNodes: []
-  viableBackwardNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 357a30f8c14060842b5d8f7059f57dcc, type: 2}
+  nodeDataList:
+  - validNodes:
+    - Floor
+    - FLCornerNF
+  - validNodes:
+    - FLCornerNF
+    - FLCorner
+  - validNodes:
+    - Empty
+  - validNodes:
+    - FWallNF
+    - FRCornerNF
+  - validNodes:
+    - Empty
+  - validNodes:
+    - LWallNF
+    - LBCornerNF

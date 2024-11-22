@@ -12,31 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bc46165eba60a5478fe6a53ec634dcd, type: 3}
   m_Name: LWallNode NF
   m_EditorClassIdentifier: 
+  prefabName: LWallNF
   prefab: {fileID: 5049310047659339170, guid: 8e44ee001acb35243827ef46a3d46ea8, type: 3}
-  faceDataList:
-  - label: LWall
-  - label: LWall
-  - label: Wall
-  - label: Empty
-  - label: WallOnRightNF
-  - label: WallOnLeftNF
-  weight: 0
-  viableTopNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
-  viableBottomNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
-  viableLeftNodes:
-    compatibleNodes: []
-  viableRightNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
-  viableForwardNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 83fcb32e3d10bd04da17f197703c21f3, type: 2}
-    - {fileID: 11400000, guid: 357a30f8c14060842b5d8f7059f57dcc, type: 2}
-  viableBackwardNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 357a30f8c14060842b5d8f7059f57dcc, type: 2}
-    - {fileID: 11400000, guid: 3bf2ef38ab8d91e498386e6593381dbd, type: 2}
+  nodeDataList:
+  - validNodes:
+    - Floor
+    - LWallNF
+  - validNodes:
+    - LWallNF
+    - LWall
+  - validNodes:
+    - Empty
+  - validNodes:
+    - Empty
+    - RWallNF
+  - validNodes:
+    - LWallNF
+    - FLCornerNF
+  - validNodes:
+    - LWallNF
+    - LBCornerNF

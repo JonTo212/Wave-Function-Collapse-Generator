@@ -10,25 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4bc46165eba60a5478fe6a53ec634dcd, type: 3}
-  m_Name: LBCornerNode NF
+  m_Name: BFSNode
   m_EditorClassIdentifier: 
-  prefabName: LBCornerNF
-  prefab: {fileID: 1303821596382928437, guid: 3d3a943dadd615c4bab7d21e9a517129, type: 3}
+  prefabName: BFS
+  prefab: {fileID: 1303821596382928437, guid: 724354544f1dacb4092f7ca1292ef9c0, type: 3}
   nodeDataList:
   - validNodes:
     - Floor
-    - LBCornerNF
-  - validNodes:
-    - LBCornerNF
-    - LBCorner
   - validNodes:
     - Empty
   - validNodes:
-    - BWallNF
-    - RBCornerNF
+    - FLCorner
+    - FWall
     - FBS
   - validNodes:
-    - LWallNF
-    - FLCornerNF
+    - RBCorner
+    - BWall
+    - FBS
   - validNodes:
-    - Empty
+    - Floor
+  - validNodes:
+    - Floor

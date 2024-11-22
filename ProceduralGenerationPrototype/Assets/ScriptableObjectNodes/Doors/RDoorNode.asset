@@ -13,30 +13,10 @@ MonoBehaviour:
   m_Name: RDoorNode
   m_EditorClassIdentifier: 
   prefab: {fileID: 4409590664598788572, guid: 279e0ecdf0d0d894c8c34d67db615af3, type: 3}
-  faceDataList:
-  - label: 4_4
-  - label: 0
-  - label: 2s
-  - label: -1d
-  - label: 1df
-  - label: 1d
-  weight: 0
-  viableTopNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
-  viableBottomNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
-  viableLeftNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
-  viableRightNodes:
-    compatibleNodes: []
-  viableForwardNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 7fb1fe069883d9d4294525373a63cc9f, type: 2}
-    - {fileID: 11400000, guid: 99930485b6bbf9f44827e21fbda7dd26, type: 2}
-  viableBackwardNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 7fb1fe069883d9d4294525373a63cc9f, type: 2}
-    - {fileID: 11400000, guid: 7f4cf7dd5b847fc4d86460aaf0fac442, type: 2}
+  nodeDataList:
+  - validNodes: []
+  - validNodes: []
+  - validNodes: []
+  - validNodes: []
+  - validNodes: []
+  - validNodes: []

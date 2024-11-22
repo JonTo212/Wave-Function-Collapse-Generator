@@ -13,30 +13,10 @@ MonoBehaviour:
   m_Name: BDoorNode
   m_EditorClassIdentifier: 
   prefab: {fileID: 4409590664598788572, guid: 0904e28729742e4408105cf37fdc417a, type: 3}
-  faceDataList:
-  - label: 4_1
-  - label: 0
-  - label: 1d
-  - label: 1df
-  - label: 2s
-  - label: -1d
-  weight: 0
-  viableTopNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
-  viableBottomNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
-  viableLeftNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 3bf2ef38ab8d91e498386e6593381dbd, type: 2}
-    - {fileID: 11400000, guid: 5a26fd7ebb7f958438f97634a94e7f9b, type: 2}
-  viableRightNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 5a26fd7ebb7f958438f97634a94e7f9b, type: 2}
-    - {fileID: 11400000, guid: 7f4cf7dd5b847fc4d86460aaf0fac442, type: 2}
-  viableForwardNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
-  viableBackwardNodes:
-    compatibleNodes: []
+  nodeDataList:
+  - validNodes: []
+  - validNodes: []
+  - validNodes: []
+  - validNodes: []
+  - validNodes: []
+  - validNodes: []

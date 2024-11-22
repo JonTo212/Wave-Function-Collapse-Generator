@@ -12,28 +12,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bc46165eba60a5478fe6a53ec634dcd, type: 3}
   m_Name: LBCornerNode Piece
   m_EditorClassIdentifier: 
+  prefabName: LBCornerPiece
   prefab: {fileID: 1303821596382928437, guid: f31ca61b727f03c4daf64814a2a2cd19, type: 3}
-  faceDataList:
-  - label: '-'
-  - label: Floor
-  - label: CornerRight
-  - label: FloorSide
-  - label: FloorSide
-  - label: CornerLeft
-  weight: 0
-  viableTopNodes:
-    compatibleNodes: []
-  viableBottomNodes:
-    compatibleNodes: []
-  viableLeftNodes:
-    compatibleNodes: []
-  viableRightNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 5a26fd7ebb7f958438f97634a94e7f9b, type: 2}
-    - {fileID: 11400000, guid: 58e7fb84c0ae4a746bcb57c437a8921a, type: 2}
-  viableForwardNodes:
-    compatibleNodes:
-    - {fileID: 11400000, guid: 41e6a8fcefb4d1145bdb2747df58c7d3, type: 2}
-    - {fileID: 11400000, guid: 357a30f8c14060842b5d8f7059f57dcc, type: 2}
-  viableBackwardNodes:
-    compatibleNodes: []
+  nodeDataList:
+  - validNodes:
+    - Floor
+    - BWall
+    - LWall
+    - LBCorner
+  - validNodes:
+    - Empty
+  - validNodes:
+    - LBCorner
+    - BWall
+    - FLCornerPiece
+    - Empty
+  - validNodes:
+    - Floor
+    - RBCornerPiece
+    - FRCornerPiece
+  - validNodes:
+    - Floor
+    - FLCornerPiece
+    - FRCornerPiece
+  - validNodes:
+    - LBCorner
+    - LWall
+    - RBCornerPiece
+    - Empty
