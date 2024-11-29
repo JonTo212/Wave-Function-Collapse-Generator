@@ -19,12 +19,6 @@ public class Editor_WFCGenerator : Editor
             script.Regenerate();
         }
 
-        if(GUILayout.Button("Expand"))
-        {
-            ClearLog();
-            script.Expand();
-        }
-
         if (GUILayout.Button("Destroy"))
         {
             ClearLog();

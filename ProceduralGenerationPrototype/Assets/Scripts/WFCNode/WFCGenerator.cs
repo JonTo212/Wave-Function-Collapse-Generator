@@ -71,61 +71,6 @@ public class WFCGenerator : MonoBehaviour
         CollapseGrid();
     }
 
-    public void Expand()
-    {
-        int newWidth = gridWidth + 1;
-        int newHeight = gridHeight + 1;
-        int newDepth = gridDepth + 1;
-
-        // Step 2: Create a new grid with updated dimensions
-        WFCNode[,,] newGrid = new WFCNode[newWidth, newHeight, newDepth];
-
-        // Step 3: Copy the existing grid into the new grid
-        for (int x = 0; x < gridWidth; x++)
-        {
-            for (int y = 0; y < gridHeight; y++)
-            {
-                for (int z = 0; z < gridDepth; z++)
-                {
-                    newGrid[x, y, z] = grid[x, y, z];
-                }
-            }
-        }
-
-        for (int x = 0; x < newWidth; x++)
-        {
-            for (int y = 0; y < newHeight; y++)
-            {
-                for (int z = 0; z < newDepth; z++)
-                {
-                    // Create the new position in the expanded grid
-                    Vector3Int newPos = new Vector3Int(x, y, z);
-
-                    // Check if the current position is beyond the original grid size
-                    if (x > gridWidth || y > gridHeight || z > gridDepth)
-                    {
-                        // Set the new position in the new grid to null (or default state)
-                        newGrid[x, y, z] = null;
-
-                        // Add the new position to the list of cells to collapse
-                        toCollapse.Add(newPos);
-                    }
-                }
-            }
-        }
-
-
-        // Step 5: Assign the new grid and updated dimensions back to the original variables
-        grid = newGrid;
-        gridWidth = newWidth;
-        gridHeight = newHeight;
-        gridDepth = newDepth;
-
-        // Step 6: Collapse the newly added nodes
-        CollapseGrid(); // CollapseGrid could be modified to only collapse nodes in `toCollapse`
-    }
-
-
     #endregion
 
     private void Start()
