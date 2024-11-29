@@ -33,7 +33,6 @@ MonoBehaviour:
     - FLCornerPiece
   - validNodes:
     - Empty
-    - Floor
   - validNodes:
     - Floor
     - BWall

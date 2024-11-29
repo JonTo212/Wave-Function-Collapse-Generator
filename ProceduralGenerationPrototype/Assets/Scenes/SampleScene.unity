@@ -441,7 +441,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridWidth: 3
-  gridHeight: 3
+  gridHeight: 1
   gridDepth: 3
   groundNodes:
   - {fileID: 11400000, guid: 83fcb32e3d10bd04da17f197703c21f3, type: 2}

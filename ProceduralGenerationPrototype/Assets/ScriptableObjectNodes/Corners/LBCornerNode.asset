@@ -26,7 +26,6 @@ MonoBehaviour:
     - RBCornerPiece
   - validNodes:
     - Empty
-    - Floor
   - validNodes:
     - BWall
     - RBCorner
@@ -36,4 +35,3 @@ MonoBehaviour:
     - LRS
   - validNodes:
     - Empty
-    - Floor

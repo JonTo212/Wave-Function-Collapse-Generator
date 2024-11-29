@@ -31,6 +31,21 @@ public class WFCNode : ScriptableObject
         validNodeDictionary[Vector3.forward] = nodeDataList[4].validNodes;
         validNodeDictionary[Vector3.back] = nodeDataList[5].validNodes;
     }
+
+    public int GetValidNodeCount()
+    {
+        int count = 0;
+
+        foreach (NodeData nodeData in nodeDataList)
+        {
+            foreach(string name in nodeData.validNodes)
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
 }
 
 [System.Serializable]

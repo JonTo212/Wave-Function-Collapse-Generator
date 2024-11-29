@@ -29,7 +29,6 @@ MonoBehaviour:
     - LWall
   - validNodes:
     - Empty
-    - Floor
   - validNodes:
     - RWall
     - FRCorner

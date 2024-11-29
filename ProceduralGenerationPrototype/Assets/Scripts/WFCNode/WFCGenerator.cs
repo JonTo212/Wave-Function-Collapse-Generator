@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ public class WFCGenerator : MonoBehaviour
     [SerializeField] private int gridHeight;
     [SerializeField] private int gridDepth;
 
-    private WFCNode[,,] grid; //3D array
+    private NodeState [,,] grid; //3D array
 
     [Header("Node Parameters")]
 
@@ -135,7 +136,32 @@ public class WFCGenerator : MonoBehaviour
 
     private void InitializeGrid()
     {
-        grid = new WFCNode[gridWidth, gridHeight, gridDepth];
+        grid = new NodeState[gridWidth, gridHeight, gridDepth];
+
+        for (int x = 0; x < gridWidth; x++)
+        {
+            for (int y = 0; y < gridHeight; y++)
+            {
+                for (int z = 0; z < gridDepth; z++)
+                {
+                    List<WFCNode> potentialNodes = new List<WFCNode>();
+
+                    potentialNodes.AddRange(groundNodes);
+                    potentialNodes.Add(floorNode);
+                    potentialNodes.Add(emptyNode);
+
+                    if (y > 0)
+                    {
+                        potentialNodes.AddRange(airNodes); //only add air nodes if above ground level
+                    }
+
+
+                    grid[x, y, z].potentialNodes = new List<WFCNode>(potentialNodes);
+                    grid[x, y, z].currentNode = null;
+                    grid[x, y, z].collapsed = false;
+                }
+            }
+        }
     }
 
     private void CollapseGrid()
@@ -150,26 +176,7 @@ public class WFCGenerator : MonoBehaviour
             int y = toCollapse[0].y;
             int z = toCollapse[0].z;
 
-            List<WFCNode> potentialNodes = new List<WFCNode>();
-
-            if (y == 0)
-            {
-                potentialNodes.AddRange(groundNodes);
-                potentialNodes.Add(floorNode);
-                potentialNodes.Add(emptyNode);
-            }
-            /*else if(y == gridHeight - 1)
-            {
-                potentialNodes.AddRange(airNodes);
-                potentialNodes.Add(floorNode);
-            }*/
-            else
-            {
-                potentialNodes.AddRange(airNodes);
-                potentialNodes.AddRange(groundNodes);
-                potentialNodes.Add(floorNode);
-                potentialNodes.Add(emptyNode);
-            }
+            //Create a list of all nodes
 
             for (int i = 0; i < neighbourCoordinates.Length; i++) //loop through all neighbours (i.e. up, down, left, right)
             {
@@ -177,13 +184,13 @@ public class WFCGenerator : MonoBehaviour
 
                 if (IsInsideGrid(neighbour))
                 {
-                    WFCNode neighbourNode = grid[neighbour.x, neighbour.y, neighbour.z];
+                    WFCNode neighbourNode = grid[neighbour.x, neighbour.y, neighbour.z].currentNode;
 
                     if (neighbourNode != null) //if the neighbour node is null, it needs to be collapsed still
                     {
 
                         Vector3 dir = neighbourCoordinates[i];
-                        ReducePossibleNodes(potentialNodes, neighbourNode, dir); //reduce possible nodes for this tile
+                        ReducePossibleNodes(grid[x, y, z].potentialNodes, neighbourNode, dir); //reduce possible nodes for this tile
 
                     }
                     else
@@ -198,23 +205,42 @@ public class WFCGenerator : MonoBehaviour
 
             bool broken = false;
 
-            if (potentialNodes.Count < 1) //no possible tiles based on constraints -> this can be changed if desired
+            if (grid[x, y, z].potentialNodes.Count < 1) //no possible tiles based on constraints -> this can be changed if desired
             {
-                grid[x, y, z] = floorNode; //if no other possibilities, add a floor
+                grid[x, y, z].currentNode = floorNode; //if no other possibilities, add a floor
                 broken = true;
             }
             else
             {
-                grid[x, y, z] = potentialNodes[Random.Range(0, potentialNodes.Count)]; //choose random node
+                grid[x, y, z].currentNode = grid[x, y, z].potentialNodes[Random.Range(0, grid[x, y, z].potentialNodes.Count)]; //choose random node
             }
 
-            GameObject newNode = Instantiate(grid[x, y, z].prefab, new Vector3(x, y, z), Quaternion.identity);
+            GameObject newNode = Instantiate(grid[x, y, z].currentNode.prefab, new Vector3(x, y, z), Quaternion.identity);
             
             if(broken)
             {
                 newNode.name = $"{x}, {y}, {z}, broken";
             }
+
             toCollapse.RemoveAt(0);
+
+            List<int> nodeCounts = new List<int>();
+            for (int i = 0; i < toCollapse.Count; i++)
+            {
+                Vector3Int position = toCollapse[i];
+                NodeState node = grid[position.x, position.y, position.z];
+                if (node != null) //ISSUE IS THAT NODE IS NULL BECAUSE IT HAS NOT BEEN COLLAPSED YET. MAKE A NEW FUNCTION THAT REDUCES THE POTENTIAL NEIGHBOURS SOMEHOW
+                {
+                    nodeCounts[i] = node.currentNode.GetValidNodeCount();
+                }
+            }
         }
     }
+}
+
+public class NodeState
+{
+    public List<WFCNode> potentialNodes;
+    public WFCNode currentNode;
+    public bool collapsed;
 }
