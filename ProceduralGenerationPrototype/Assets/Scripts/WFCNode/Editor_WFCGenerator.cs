@@ -13,7 +13,7 @@ public class Editor_WFCGenerator : Editor
 
         WFCGenerator script = (WFCGenerator)target;
 
-        if(GUILayout.Button("Regenerate"))
+        if (GUILayout.Button("Regenerate"))
         {
             ClearLog();
             script.Regenerate();
