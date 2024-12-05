@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-//using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class WFCGenerator : MonoBehaviour
@@ -20,6 +19,7 @@ public class WFCGenerator : MonoBehaviour
     [SerializeField] private WFCNode emptyNode;
     [SerializeField] private WFCNode floorNode;
     private List<Vector3Int> toCollapse = new List<Vector3Int>();    //list of nodes that still need to be collapsed
+    //private List<Vector3Int> toCollapse = new List<Vector3Int>();    //list of nodes that still need to be collapsed
 
     private Vector3Int[] neighbourCoordinates = new Vector3Int[]
     {
@@ -51,6 +51,18 @@ public class WFCGenerator : MonoBehaviour
         }
     }
 
+    private bool Collapsed()
+    {
+        foreach(NodeState node in grid)
+        {
+            if (!node.collapsed)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     #endregion
 
     #region Regenerate function
@@ -68,7 +80,8 @@ public class WFCGenerator : MonoBehaviour
     {
         DestroyGrid();
         InitializeGrid();
-        CollapseGrid();
+        WFC();
+        //CollapseGrid();
     }
 
     #endregion
@@ -76,7 +89,8 @@ public class WFCGenerator : MonoBehaviour
     private void Start()
     {
         InitializeGrid();
-        CollapseGrid();
+        WFC();
+        //CollapseGrid();
     }
 
     private void InitializeGrid()
@@ -95,7 +109,7 @@ public class WFCGenerator : MonoBehaviour
 
                     potentialNodes.AddRange(groundNodes);
                     potentialNodes.Add(floorNode);
-                    potentialNodes.Add(emptyNode);
+                    //potentialNodes.Add(emptyNode);
 
                     if (y > 0)
                     {
@@ -109,7 +123,196 @@ public class WFCGenerator : MonoBehaviour
         }
     }
 
-    private void CollapseGrid()
+    private void WFC()
+    {
+        while (!Collapsed())
+        {
+            Iterate();
+        }
+        Visualize();
+    }
+
+    private void Iterate()
+    {
+        var coords = GetMinEntropyCoords();
+        CollapseAt(coords);
+        Propagate(coords);
+        toCollapse.Remove(coords);
+    }
+
+    private Vector3Int GetMinEntropyCoords()
+    {
+        Vector3Int minCoords = new Vector3Int(0, 0, 0);
+        int minCount = int.MaxValue;
+
+        for (int x = 0; x < gridWidth; x++)
+        {
+            for (int y = 0; y < gridHeight; y++)
+            {
+                for (int z = 0; z < gridDepth; z++)
+                {
+                    if (grid[x, y, z].potentialNodes.Count > 1)
+                    {
+                        int count = grid[x, y, z].potentialNodes.Count;
+                        if (count < minCount)
+                        {
+                            minCount = count;
+                            minCoords = new Vector3Int(x, y, z);
+                        }
+                        else if(count == minCount) //randomize when they're the same
+                        {
+                            if (Random.Range(0, 2) == 0)
+                            {
+                                minCoords = new Vector3Int(x, y, z);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return minCoords;
+    }
+
+    /*private void CollapseAt(Vector3Int coords)
+    {
+        int x = coords.x;
+        int y = coords.y;
+        int z = coords.z;
+
+        for (int i = 0; i < neighbourCoordinates.Length; i++) //loop through all neighbours (i.e. up, down, left, right)
+        {
+            Vector3Int neighbour = new Vector3Int(x + neighbourCoordinates[i].x, y + neighbourCoordinates[i].y, z + neighbourCoordinates[i].z); //this represents each neighbour position
+
+            if (IsInsideGrid(neighbour))
+            {
+                WFCNode neighbourNode = grid[neighbour.x, neighbour.y, neighbour.z].currentNode;
+
+                if (neighbourNode != null) //if the neighbour node is null, it needs to be collapsed still
+                {
+                    Vector3 dir = neighbourCoordinates[i];
+                    grid[x, y, z].neighbours[i] = neighbourNode;
+                    grid[x, y, z].neighbourLocations[i] = neighbour;
+                    grid[neighbour.x, neighbour.y, neighbour.z].relativeLocation = -dir;
+                    ReducePossibleNodes(grid[x, y, z].potentialNodes, neighbourNode, dir); //reduce possible nodes for this tile
+                }
+            }
+        }
+
+        if (grid[x, y, z].potentialNodes.Count < 1) //no possible tiles based on constraints -> this can be changed if desired
+        {
+            grid[x, y, z].currentNode = floorNode; //if no other possibilities, add a floor
+        }
+        else
+        {
+            grid[x, y, z].currentNode = grid[x, y, z].potentialNodes[Random.Range(0, grid[x, y, z].potentialNodes.Count)]; //choose random node
+            grid[x, y, z].potentialNodes.Clear();
+            grid[x, y, z].potentialNodes.Add(grid[x, y, z].currentNode); //remove the rest of the nodes from potentialNodes so there is only 1 left
+        }
+    }
+
+    private void Propagate(Vector3Int coords)
+    {
+        int x = coords.x;
+        int y = coords.y;
+        int z = coords.z;
+
+        for (int i = 0; i < neighbourCoordinates.Length; i++)
+        {
+            Vector3 dir = neighbourCoordinates[i];
+            Vector3Int neighbour = new Vector3Int(x + neighbourCoordinates[i].x, y + neighbourCoordinates[i].y, z + neighbourCoordinates[i].z);
+
+            if (IsInsideGrid(neighbour) && grid[x, y, z].neighbours[i] != null)
+            {
+                NodeState neighborNode = grid[neighbour.x, neighbour.y, neighbour.z];
+
+                if (neighborNode.currentNode != null)
+                    continue;
+
+                ReducePossibleNodes(neighborNode.potentialNodes, grid[x,y,z].currentNode, -dir);
+            }
+        }
+    } //BEGIN WORKING FROM HERE :THUMBSUP:*/
+
+    private void CollapseAt(Vector3Int coords)
+    {
+        int x = coords.x;
+        int y = coords.y;
+        int z = coords.z;
+
+        if (grid[x, y, z].potentialNodes.Count < 1) //no possible tiles based on constraints -> this can be changed if desired
+        {
+            grid[x, y, z].currentNode = floorNode; //if no other possibilities, add a floor
+        }
+        else
+        {
+            grid[x, y, z].currentNode = grid[x, y, z].potentialNodes[Random.Range(0, grid[x, y, z].potentialNodes.Count)]; //choose random node
+            grid[x, y, z].potentialNodes.Clear();
+            grid[x, y, z].potentialNodes.Add(grid[x, y, z].currentNode); //remove the rest of the nodes from potentialNodes so there is only 1 left
+        }
+
+        grid[x, y, z].collapsed = true;
+    }
+
+
+    private void Propagate(Vector3Int coords)
+    {
+        toCollapse.Add(coords);
+
+        while (toCollapse.Count > 0)
+        {
+            foreach (Vector3Int neighbour in neighbourCoordinates)
+            {
+                Vector3Int neighbourCoords = coords + neighbour;
+
+                if (IsInsideGrid(neighbourCoords))
+                {
+                    List<WFCNode> otherPossibleNodes = grid[neighbourCoords.x, neighbourCoords.y, neighbourCoords.z].potentialNodes;
+
+                    List<string> possibleNeighbours = grid[coords.x, coords.y, coords.z].currentNode.GetValidNeighbours(coords, neighbour);
+
+                    if (grid[neighbourCoords.x, neighbourCoords.y, neighbourCoords.z].potentialNodes.Count == 0)
+                        continue;
+
+                    for (int i = otherPossibleNodes.Count - 1; i >= 0; i--)
+                    {
+                        WFCNode node = otherPossibleNodes[i];
+                        if (!possibleNeighbours.Contains(node.prefabName))
+                        {
+                            Constrain(neighbourCoords, node);
+                            if (!toCollapse.Contains(neighbourCoords))
+                            {
+                                toCollapse.Add(neighbourCoords);
+                            }
+                        }
+                    }
+                }
+            }
+            toCollapse.RemoveAt(0);
+
+        }
+    }
+
+    private void Constrain(Vector3Int coords, WFCNode node)
+    {
+        grid[coords.x, coords.y, coords.z].potentialNodes.Remove(node);
+    }
+
+    private void Visualize()
+    {
+        for (int x = 0; x < gridWidth; x++)
+        {
+            for (int y = 0; y < gridHeight; y++)
+            {
+                for (int z = 0; z < gridDepth; z++)
+                {
+                    GameObject newNode = Instantiate(grid[x, y, z].currentNode.prefab, new Vector3(x, y, z), Quaternion.identity);
+                }
+            }
+        }
+    }
+
+    /*private void CollapseGrid()
     {
         toCollapse.Clear();
 
@@ -136,6 +339,7 @@ public class WFCGenerator : MonoBehaviour
                         Vector3 dir = neighbourCoordinates[i];
                         grid[x, y, z].neighbours[i] = neighbourNode;
                         grid[x, y, z].neighbourLocations[i] = neighbour;
+                        grid[neighbour.x, neighbour.y, neighbour.z].relativeLocation = -dir;
                         ReducePossibleNodes(grid[x, y, z].potentialNodes, neighbourNode, dir); //reduce possible nodes for this tile
 
                     }
@@ -161,12 +365,18 @@ public class WFCGenerator : MonoBehaviour
                 grid[x, y, z].currentNode = grid[x, y, z].potentialNodes[Random.Range(0, grid[x, y, z].potentialNodes.Count)]; //choose random node
             }
 
-            foreach (Vector3Int neighbour in grid[x, y, z].neighbourLocations)
-            {
-                ReducePossibleNodes(grid[neighbour.x, neighbour.y, neighbour.z].potentialNodes, grid[x,y,z].currentNode, new Vector3(neighbour.x - x, neighbour.y - y, neighbour.z));
-            }
-
             GameObject newNode = Instantiate(grid[x, y, z].currentNode.prefab, new Vector3(x, y, z), Quaternion.identity);
+
+            for(int i = 0; i < grid[x, y, z].neighbourLocations.Length; i++)
+            {
+                Vector3Int currentLoc = grid[x, y, z].neighbourLocations[i];
+
+                if (IsInsideGrid(currentLoc) && grid[currentLoc.x, currentLoc.y, currentLoc.z] != null)
+                {
+                    //ReducePossibleNodes(grid[currentLoc.x, currentLoc.y, currentLoc.z].potentialNodes, grid[x, y, z].currentNode, grid[currentLoc.x, currentLoc.y, currentLoc.z].relativeLocation);
+
+                }
+            }
 
             if (broken)
             {
@@ -175,13 +385,15 @@ public class WFCGenerator : MonoBehaviour
 
             toCollapse.RemoveAt(0);
         }
-    }
+    }*/
 }
 
 public class NodeState
 {
     public List<WFCNode> potentialNodes;
     public WFCNode currentNode;
-    public WFCNode[] neighbours = new WFCNode[6];
-    public Vector3Int[] neighbourLocations = new Vector3Int[6];
+    public bool collapsed;
+    //public WFCNode[] neighbours = new WFCNode[6];
+    //public Vector3Int[] neighbourLocations = new Vector3Int[6];
+    //public Vector3 relativeLocation;
 }

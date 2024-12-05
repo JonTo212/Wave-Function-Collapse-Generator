@@ -10,6 +10,7 @@ public class WFCNode : ScriptableObject
     public GameObject prefab;
     public List<NodeData> nodeDataList = new List<NodeData>();
     public Dictionary<Vector3, List<string>> validNodeDictionary = new Dictionary<Vector3, List<string>>();
+    public Dictionary<Vector3, List<WFCNode>> validNodes = new Dictionary<Vector3, List<WFCNode>>();
 
     private void OnEnable()
     {
@@ -31,6 +32,16 @@ public class WFCNode : ScriptableObject
         validNodeDictionary[Vector3.forward] = nodeDataList[4].validNodes;
         validNodeDictionary[Vector3.back] = nodeDataList[5].validNodes;
     }
+
+    public List<string> GetValidNeighbours(Vector3 currentCoords, Vector3 dir)
+    {
+        return validNodeDictionary[dir];
+    }
+
+    /*public List<WFCNode> GetValidNeighbours(Vector3 currentCoords, Vector3 dir)
+    {
+        return validNodes[dir];
+    }*/
 
     public int GetValidNodeCount()
     {
