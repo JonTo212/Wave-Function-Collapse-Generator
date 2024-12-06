@@ -13,17 +13,30 @@ MonoBehaviour:
   m_Name: FWallNode
   m_EditorClassIdentifier: 
   prefabName: FWall
+  weight: 2
   prefab: {fileID: 5049310047659339170, guid: c51983bfacdeacb45b780ee63733ef19, type: 3}
   nodeDataList:
   - validNodes:
     - FWallNF
     - Floor
+    - BWall
+    - FWall
+    - RWall
+    - LWall
+    - FRCorner
+    - FLCorner
+    - LBCorner
+    - RBCorner
   - validNodes:
     - Empty
-    - FLCornerPiece
-    - FRCornerPiece
-    - LBCornerPiece
-    - RBCornerPiece
+    - BWall
+    - FWall
+    - RWall
+    - LWall
+    - FRCorner
+    - FLCorner
+    - LBCorner
+    - RBCorner
   - validNodes:
     - FWall
     - FLCorner

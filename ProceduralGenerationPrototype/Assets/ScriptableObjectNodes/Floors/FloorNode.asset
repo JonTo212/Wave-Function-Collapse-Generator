@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: FloorNode
   m_EditorClassIdentifier: 
   prefabName: Floor
+  weight: 1
   prefab: {fileID: 745449460276910111, guid: 658a031a1138d424190e0bcd7de50bb3, type: 3}
   nodeDataList:
   - validNodes:

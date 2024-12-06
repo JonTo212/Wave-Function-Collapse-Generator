@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: LBCornerNode
   m_EditorClassIdentifier: 
   prefabName: LBCorner
+  weight: 3
   prefab: {fileID: 1303821596382928437, guid: 1c70ecdd3dde55246a4872115d936761, type: 3}
   nodeDataList:
   - validNodes:
@@ -20,18 +21,23 @@ MonoBehaviour:
     - Floor
   - validNodes:
     - Empty
-    - FLCornerPiece
-    - FRCornerPiece
-    - LBCornerPiece
-    - RBCornerPiece
+    - BWall
+    - FWall
+    - RWall
+    - LWall
+    - FRCorner
+    - FLCorner
+    - LBCorner
+    - RBCorner
   - validNodes:
     - Empty
   - validNodes:
     - BWall
     - RBCorner
+    - LBCornerPiece
   - validNodes:
     - LWall
     - FLCorner
-    - LRS
+    - LBCornerPiece
   - validNodes:
     - Empty

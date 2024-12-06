@@ -7,6 +7,7 @@ using UnityEngine;
 public class WFCNode : ScriptableObject
 {
     public string prefabName;
+    public int weight;
     public GameObject prefab;
     public List<NodeData> nodeDataList = new List<NodeData>();
     public Dictionary<Vector3, List<string>> validNodeDictionary = new Dictionary<Vector3, List<string>>();
@@ -15,6 +16,7 @@ public class WFCNode : ScriptableObject
     private void OnEnable()
     {
         PopulateValidNodeDictionary();
+        //PopulateValidNodes();
     }
 
     public void PopulateValidNodeDictionary()
@@ -37,12 +39,7 @@ public class WFCNode : ScriptableObject
     {
         return validNodeDictionary[dir];
     }
-
-    /*public List<WFCNode> GetValidNeighbours(Vector3 currentCoords, Vector3 dir)
-    {
-        return validNodes[dir];
-    }*/
-
+    
     public int GetValidNodeCount()
     {
         int count = 0;
@@ -57,10 +54,32 @@ public class WFCNode : ScriptableObject
 
         return count;
     }
+
+    /*public void PopulateValidNodes()
+    {
+        if (validNodes != null)
+        {
+            validNodes.Clear(); //make sure it's freshly populated
+        }
+
+        //Tie valid node string lists to direction
+        validNodes[Vector3.up] = nodeDataList[0].validNodes;
+        validNodes[Vector3.down] = nodeDataList[1].validNodes;
+        validNodes[Vector3.left] = nodeDataList[2].validNodes;
+        validNodes[Vector3.right] = nodeDataList[3].validNodes;
+        validNodes[Vector3.forward] = nodeDataList[4].validNodes;
+        validNodes[Vector3.back] = nodeDataList[5].validNodes;
+    }
+
+    public List<WFCNode> GetValidNeighbours(Vector3 currentCoords, Vector3 dir)
+    {
+        return validNodes[dir];
+    }*/
 }
 
 [System.Serializable]
 public class NodeData
 {
     public List<string> validNodes;
+    //public List<WFCNode> validNodes;
 }
