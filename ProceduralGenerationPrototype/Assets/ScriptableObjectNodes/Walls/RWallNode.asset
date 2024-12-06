@@ -40,11 +40,15 @@ MonoBehaviour:
   - validNodes:
     - Floor
     - LWall
+    - FLCornerPiece
+    - LBCornerPiece
   - validNodes:
     - Empty
   - validNodes:
     - RWall
     - FRCorner
+    - RBCornerPiece
   - validNodes:
     - RWall
     - RBCorner
+    - FRCornerPiece

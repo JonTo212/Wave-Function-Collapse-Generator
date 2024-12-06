@@ -40,6 +40,7 @@ MonoBehaviour:
   - validNodes:
     - FWall
     - FLCorner
+    - FRCornerPiece
   - validNodes:
     - FWall
     - FRCorner
@@ -49,3 +50,5 @@ MonoBehaviour:
   - validNodes:
     - Floor
     - BWall
+    - RBCornerPiece
+    - LBCornerPiece

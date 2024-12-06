@@ -23,18 +23,12 @@ MonoBehaviour:
   - validNodes:
     - FLCorner
     - FWall
-    - LBCornerPiece
-    - Empty
   - validNodes:
     - Floor
-    - FRCornerPiece
-    - RBCornerPiece
+    - RWall
   - validNodes:
     - FLCorner
     - LWall
-    - FRCornerPiece
-    - Empty
   - validNodes:
     - Floor
-    - LBCornerPiece
-    - RBCornerPiece
+    - BWall
