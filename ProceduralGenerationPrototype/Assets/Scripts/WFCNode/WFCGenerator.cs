@@ -117,6 +117,13 @@ public class WFCGenerator : MonoBehaviour
                 highestWeightedNode = node;
                 highestWeight = node.weight;
             }
+            else if(node.weight == highestWeight)
+            {
+                if (Random.Range(0, 2) == 0)
+                {
+                    highestWeightedNode = node;
+                }
+            }
         }
 
         return highestWeightedNode;
@@ -214,7 +221,7 @@ public class WFCGenerator : MonoBehaviour
                     if (!isEdge)
                     {*/
                     grid[x, y, z].potentialNodes.AddRange(groundNodes);
-                    grid[x, y, z].potentialNodes.Add(floorNode);
+                    //grid[x, y, z].potentialNodes.Add(floorNode);
 
                     if (y > 0)
                     {
@@ -257,6 +264,7 @@ public class WFCGenerator : MonoBehaviour
         }
         else
         {
+            //grid[x, y, z].currentNode = GetHighestWeightedNode(grid[x, y, z].potentialNodes);
             grid[x, y, z].currentNode = grid[x, y, z].potentialNodes[Random.Range(0, grid[x, y, z].potentialNodes.Count)]; //choose random node
             grid[x, y, z].potentialNodes.Clear();
             grid[x, y, z].potentialNodes.Add(grid[x, y, z].currentNode); //remove the rest of the nodes from potentialNodes so there is only 1 left

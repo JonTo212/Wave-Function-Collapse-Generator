@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bc46165eba60a5478fe6a53ec634dcd, type: 3}
+  m_Name: bwalldown
+  m_EditorClassIdentifier: 
+  prefabName: bwalldown
+  weight: 1
+  prefab: {fileID: 1303821596382928437, guid: f8c06d212eb04a34087b82f5d458dc44, type: 3}
+  nodeDataList:
+  - validNodes:
+    - empty
+  - validNodes:
+    - bwallup
+  - validNodes:
+    - lbcornerdown
+    - bwalldown
+  - validNodes:
+    - rbcornerdown
+    - bwalldown
+  - validNodes:
+    - floorup
+  - validNodes:
+    - empty
