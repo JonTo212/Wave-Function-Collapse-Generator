@@ -74,7 +74,7 @@ public class WFCGenerator : MonoBehaviour
 
     private Vector3Int GetMinEntropyCoords()
     {
-        Vector3Int minCoords = new Vector3Int(0, 0, 0);
+        Vector3Int minCoords = new Vector3Int(Random.Range(0, gridWidth), Random.Range(0, gridHeight), Random.Range(0, gridDepth));
         int minCount = int.MaxValue;
 
         for (int x = 0; x < gridWidth; x++)
@@ -220,6 +220,7 @@ public class WFCGenerator : MonoBehaviour
 
                     if (!isEdge)
                     {*/
+
                     grid[x, y, z].potentialNodes.AddRange(groundNodes);
                     //grid[x, y, z].potentialNodes.Add(floorNode);
 
@@ -264,8 +265,8 @@ public class WFCGenerator : MonoBehaviour
         }
         else
         {
-            //grid[x, y, z].currentNode = GetHighestWeightedNode(grid[x, y, z].potentialNodes);
-            grid[x, y, z].currentNode = grid[x, y, z].potentialNodes[Random.Range(0, grid[x, y, z].potentialNodes.Count)]; //choose random node
+            grid[x, y, z].currentNode = GetHighestWeightedNode(grid[x, y, z].potentialNodes);
+            //grid[x, y, z].currentNode = grid[x, y, z].potentialNodes[Random.Range(0, grid[x, y, z].potentialNodes.Count)]; //choose random node
             grid[x, y, z].potentialNodes.Clear();
             grid[x, y, z].potentialNodes.Add(grid[x, y, z].currentNode); //remove the rest of the nodes from potentialNodes so there is only 1 left
         }

@@ -350,9 +350,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 719a9f177e02eb647be018f898a39262, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridWidth: 10
+  gridWidth: 5
   gridHeight: 2
-  gridDepth: 10
+  gridDepth: 5
   LEdgeNodes: []
   REdgeNodes: []
   FEdgeNodes: []

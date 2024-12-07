@@ -10,23 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4bc46165eba60a5478fe6a53ec634dcd, type: 3}
-  m_Name: bwalldown
+  m_Name: rwalldown
   m_EditorClassIdentifier: 
-  prefabName: bwalldown
+  prefabName: rwalldown
   weight: 1
-  prefab: {fileID: 1303821596382928437, guid: f8c06d212eb04a34087b82f5d458dc44, type: 3}
+  prefab: {fileID: 1303821596382928437, guid: 01b593613c489c04bbeab3ab63aeb7b9, type: 3}
   nodeDataList:
   - validNodes:
     - empty
   - validNodes:
-    - bwallup
-  - validNodes:
-    - lbcornerdown
-    - bwalldown
-  - validNodes:
-    - rbcornerdown
-    - bwalldown
+    - rwallup
   - validNodes:
     - floorup
+    - lwalldown
   - validNodes:
     - empty
+  - validNodes:
+    - frcornerdown
+    - rwalldown
+  - validNodes:
+    - rbcornerdown
+    - rwalldown

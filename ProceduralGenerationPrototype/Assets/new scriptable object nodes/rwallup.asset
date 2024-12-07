@@ -21,7 +21,8 @@ MonoBehaviour:
   - validNodes:
     - empty
   - validNodes:
-    - rwalldown
+    - empty
+    - lwallup
   - validNodes:
     - floordown
     - lwallup
