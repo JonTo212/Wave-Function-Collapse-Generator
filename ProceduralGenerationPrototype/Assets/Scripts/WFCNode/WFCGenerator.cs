@@ -112,6 +112,12 @@ public class WFCGenerator : MonoBehaviour
 
         foreach (WFCNode node in potentialNodes)
         {
+
+            if (node == emptyNode && potentialNodes.Count > 1)
+            {
+                continue;
+            }
+
             if (node.weight > highestWeight)
             {
                 highestWeightedNode = node;

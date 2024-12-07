@@ -30,4 +30,4 @@ MonoBehaviour:
     - empty
   - validNodes:
     - floorup
-    - lwalldown
+    - bwalldown
