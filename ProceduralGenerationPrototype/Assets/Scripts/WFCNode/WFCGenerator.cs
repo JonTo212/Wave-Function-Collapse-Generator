@@ -13,22 +13,10 @@ public class WFCGenerator : MonoBehaviour
     private NodeState [,,] grid; //3D array
 
     [Header("Node Parameters")]
-
-    [SerializeField] private List<WFCNode> LEdgeNodes;
-    [SerializeField] private List<WFCNode> REdgeNodes;
-    [SerializeField] private List<WFCNode> FEdgeNodes;
-    [SerializeField] private List<WFCNode> BEdgeNodes;
-    [SerializeField] private WFCNode FRCorner;
-    [SerializeField] private WFCNode FLCorner;
-    [SerializeField] private WFCNode RBCorner;
-    [SerializeField] private WFCNode LBCorner;
-
     [SerializeField] private List<WFCNode> groundNodes;              //list of all ground nodes
     [SerializeField] private List<WFCNode> airNodes;                 //list of all air nodes
     [SerializeField] private WFCNode emptyNode;
-    [SerializeField] private WFCNode floorNode;
     private List<Vector3Int> toCollapse = new List<Vector3Int>();    //list of nodes that still need to be collapsed
-    //private List<Vector3Int> toCollapse = new List<Vector3Int>();    //list of nodes that still need to be collapsed
 
     private Vector3Int[] neighbourCoordinates = new Vector3Int[]
     {
@@ -179,56 +167,8 @@ public class WFCGenerator : MonoBehaviour
 
                     grid[x, y, z].potentialNodes = new List<WFCNode>();
 
-                    /*bool isEdge = false; //was testing more constraints
-                    if (x == 0)
-                    {
-                        if (z == 0)
-                        {
-                            grid[x, y, z].potentialNodes.Add(LBCorner);
-                        }
-                        else if (z == gridDepth - 1)
-                        {
-                            grid[x, y, z].potentialNodes.Add(FLCorner);
-                        }
-                        else
-                        {
-                            grid[x, y, z].potentialNodes.AddRange(LEdgeNodes);
-                        }
-                        isEdge = true;
-                    }
-                    
-                    if (z == 0 && x != 0 && x != gridWidth - 1)
-                    {
-                        grid[x, y, z].potentialNodes.AddRange(BEdgeNodes);
-                        isEdge = true;
-                    }
-                    if (x == gridWidth - 1)
-                    {
-                        if (z == 0)
-                        {
-                            grid[x, y, z].potentialNodes.Add(RBCorner);
-                        }
-                        else if (z == gridDepth - 1)
-                        {
-                            grid[x, y, z].potentialNodes.Add(FRCorner);
-                        }
-                        else
-                        {
-                            grid[x, y, z].potentialNodes.AddRange(REdgeNodes);
-                        }
-                        isEdge = true;
-                    }
-                    if (z == gridDepth - 1 && x != 0 && x != gridWidth - 1)
-                    {
-                        grid[x, y, z].potentialNodes.AddRange(FEdgeNodes);
-                        isEdge = true;
-                    }
-
-                    if (!isEdge)
-                    {*/
 
                     grid[x, y, z].potentialNodes.AddRange(groundNodes);
-                    //grid[x, y, z].potentialNodes.Add(floorNode);
 
                     if (y > 0)
                     {
