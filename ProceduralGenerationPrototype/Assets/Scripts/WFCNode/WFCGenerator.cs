@@ -93,35 +93,23 @@ public class WFCGenerator : MonoBehaviour
         return minCoords;
     }
 
-    private WFCNode GetHighestWeightedNode(List<WFCNode> potentialNodes)
+    private WFCNode GetWeightedRandomNode(List<WFCNode> potentialNodes)
     {
-        WFCNode highestWeightedNode = potentialNodes[0];
-        int highestWeight = highestWeightedNode.weight;
+        int totalWeight = potentialNodes.Sum(node => node.weight);
+        int randomWeight = Random.Range(0, totalWeight);
 
+        int cumulativeWeight = 0;
         foreach (WFCNode node in potentialNodes)
         {
-
-            if (node == emptyNode && potentialNodes.Count > 1)
+            cumulativeWeight += node.weight;
+            if (randomWeight < cumulativeWeight)
             {
-                continue;
-            }
-
-            if (node.weight > highestWeight)
-            {
-                highestWeightedNode = node;
-                highestWeight = node.weight;
-            }
-            else if(node.weight == highestWeight)
-            {
-                if (Random.Range(0, 2) == 0)
-                {
-                    highestWeightedNode = node;
-                }
+                return node;
             }
         }
-
-        return highestWeightedNode;
+        return potentialNodes[0];
     }
+
 
     #endregion
 
@@ -211,7 +199,7 @@ public class WFCGenerator : MonoBehaviour
         }
         else
         {
-            grid[x, y, z].currentNode = GetHighestWeightedNode(grid[x, y, z].potentialNodes);
+            grid[x, y, z].currentNode = GetWeightedRandomNode(grid[x, y, z].potentialNodes);
             //grid[x, y, z].currentNode = grid[x, y, z].potentialNodes[Random.Range(0, grid[x, y, z].potentialNodes.Count)]; //choose random node
             grid[x, y, z].potentialNodes.Clear();
             grid[x, y, z].potentialNodes.Add(grid[x, y, z].currentNode); //remove the rest of the nodes from potentialNodes so there is only 1 left

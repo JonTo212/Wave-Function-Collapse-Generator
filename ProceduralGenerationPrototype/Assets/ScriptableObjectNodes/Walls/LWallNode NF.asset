@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LWallNode NF
   m_EditorClassIdentifier: 
   prefabName: LWallNF
-  weight: 2
+  weight: 4
   prefab: {fileID: 5049310047659339170, guid: 8e44ee001acb35243827ef46a3d46ea8, type: 3}
   nodeDataList:
   - validNodes:

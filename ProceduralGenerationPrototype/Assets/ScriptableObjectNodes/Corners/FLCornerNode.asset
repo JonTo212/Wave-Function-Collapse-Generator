@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FLCornerNode
   m_EditorClassIdentifier: 
   prefabName: FLCorner
-  weight: 3
+  weight: 1
   prefab: {fileID: 1303821596382928437, guid: 3d9cd84faa5c38c4bb4aecd96d3ac321, type: 3}
   nodeDataList:
   - validNodes:

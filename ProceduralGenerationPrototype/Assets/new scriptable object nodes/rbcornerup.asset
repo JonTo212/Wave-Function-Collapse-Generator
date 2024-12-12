@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: rbcornerup
   m_EditorClassIdentifier: 
   prefabName: rbcornerup
-  weight: 1
+  weight: 5
   prefab: {fileID: 1303821596382928437, guid: fa6d92064f6a2d143b1e9d909ac5745c, type: 3}
   nodeDataList:
   - validNodes:

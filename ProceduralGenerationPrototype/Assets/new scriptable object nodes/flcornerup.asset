@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: flcornerup
   m_EditorClassIdentifier: 
   prefabName: flcornerup
-  weight: 1
+  weight: 5
   prefab: {fileID: 1303821596382928437, guid: 80ebca9eadec4fa4fa0ba28be3c762b2, type: 3}
   nodeDataList:
   - validNodes:

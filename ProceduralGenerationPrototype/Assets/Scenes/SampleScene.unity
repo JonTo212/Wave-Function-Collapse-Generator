@@ -350,27 +350,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 719a9f177e02eb647be018f898a39262, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridWidth: 5
+  gridWidth: 10
   gridHeight: 2
-  gridDepth: 5
-  LEdgeNodes: []
-  REdgeNodes: []
-  FEdgeNodes: []
-  BEdgeNodes: []
-  FRCorner: {fileID: 0}
-  FLCorner: {fileID: 0}
-  RBCorner: {fileID: 0}
-  LBCorner: {fileID: 0}
+  gridDepth: 10
   groundNodes:
-  - {fileID: 11400000, guid: 853275a7668c12947bb6d20abc8cbfc9, type: 2}
   - {fileID: 11400000, guid: d026baf77325fcf43b352858298774c4, type: 2}
   - {fileID: 11400000, guid: 4fbd41cf736e9f84486aea6744e958df, type: 2}
   - {fileID: 11400000, guid: 4b0bb19fcb111ac428b302d9774a6444, type: 2}
-  - {fileID: 11400000, guid: 848915ff7815a4945a5d127e6570c5fc, type: 2}
   - {fileID: 11400000, guid: 90f7bc252bf871f40a70e9d5e4c829d4, type: 2}
-  - {fileID: 11400000, guid: 0d8821da2e72d2b409181835c1f4e954, type: 2}
   - {fileID: 11400000, guid: f758c20d733561842b7a4afcca26896b, type: 2}
+  - {fileID: 11400000, guid: 848915ff7815a4945a5d127e6570c5fc, type: 2}
+  - {fileID: 11400000, guid: 0d8821da2e72d2b409181835c1f4e954, type: 2}
   - {fileID: 11400000, guid: 0dbcb6622d1bf2a428ea55527c4c95f4, type: 2}
+  - {fileID: 11400000, guid: 853275a7668c12947bb6d20abc8cbfc9, type: 2}
   airNodes:
   - {fileID: 11400000, guid: c238f7663aae0c24bba370260f366c0a, type: 2}
   - {fileID: 11400000, guid: 50490ec5568211a41b94a945f3b094cd, type: 2}
@@ -382,7 +374,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ec42e88a35e502942bad8bf9844b806b, type: 2}
   - {fileID: 11400000, guid: decf6862cba12fe4ab6270f36876c82a, type: 2}
   emptyNode: {fileID: 11400000, guid: a8c285b80dee57240bd36bf898a376fc, type: 2}
-  floorNode: {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
 --- !u!4 &876706206
 Transform:
   m_ObjectHideFlags: 0
@@ -506,7 +497,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1936370413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -522,14 +513,6 @@ MonoBehaviour:
   gridWidth: 10
   gridHeight: 1
   gridDepth: 10
-  LEdgeNodes: []
-  REdgeNodes: []
-  FEdgeNodes: []
-  BEdgeNodes: []
-  FRCorner: {fileID: 0}
-  FLCorner: {fileID: 0}
-  RBCorner: {fileID: 0}
-  LBCorner: {fileID: 0}
   groundNodes:
   - {fileID: 11400000, guid: 83fcb32e3d10bd04da17f197703c21f3, type: 2}
   - {fileID: 11400000, guid: 99930485b6bbf9f44827e21fbda7dd26, type: 2}
@@ -539,10 +522,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4fd3f01f2683e304db2223b3cc9510be, type: 2}
   - {fileID: 11400000, guid: 41e6a8fcefb4d1145bdb2747df58c7d3, type: 2}
   - {fileID: 11400000, guid: 7fb1fe069883d9d4294525373a63cc9f, type: 2}
-  - {fileID: 11400000, guid: 67e6658d7cfab8442b8191b0b20dda2e, type: 2}
-  - {fileID: 11400000, guid: ff35560a93731d443823a43758f33efe, type: 2}
-  - {fileID: 11400000, guid: 0a3b21655a6f0c342b757f8c9524686d, type: 2}
-  - {fileID: 11400000, guid: 21bdc61b4a8262c47aeae102de8f10c9, type: 2}
+  - {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
   airNodes:
   - {fileID: 11400000, guid: 81bd32d7e4ca55940ad8128bca7f7724, type: 2}
   - {fileID: 11400000, guid: f9faea0a01abcc245ab95323a5248057, type: 2}
@@ -553,7 +533,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ef05a66907c335640a1e5a765cdec952, type: 2}
   - {fileID: 11400000, guid: 44f1dc65281ec2a418b90271cdf7c379, type: 2}
   emptyNode: {fileID: 11400000, guid: 83e47585e749f5742a12287c04921c4f, type: 2}
-  floorNode: {fileID: 11400000, guid: 8622b686122682c43959e8fe3e4499f3, type: 2}
 --- !u!4 &1936370414
 Transform:
   m_ObjectHideFlags: 0

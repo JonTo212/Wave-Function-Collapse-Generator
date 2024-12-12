@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: floorup
   m_EditorClassIdentifier: 
   prefabName: floorup
-  weight: 1
+  weight: 8
   prefab: {fileID: 1303821596382928437, guid: 39becec937e786441a092c90fb476102, type: 3}
   nodeDataList:
   - validNodes:

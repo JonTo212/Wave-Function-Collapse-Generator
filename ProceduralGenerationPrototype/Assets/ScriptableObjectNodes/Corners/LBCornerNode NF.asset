@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LBCornerNode NF
   m_EditorClassIdentifier: 
   prefabName: LBCornerNF
-  weight: 3
+  weight: 1
   prefab: {fileID: 1303821596382928437, guid: 3d3a943dadd615c4bab7d21e9a517129, type: 3}
   nodeDataList:
   - validNodes:

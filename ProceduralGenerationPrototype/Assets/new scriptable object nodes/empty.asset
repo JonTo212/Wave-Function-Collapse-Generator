@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: empty
   m_EditorClassIdentifier: 
   prefabName: empty
-  weight: 0
+  weight: 3
   prefab: {fileID: 1928768526517317970, guid: d2dd0af2f1ae34d43ab03fa53211f400, type: 3}
   nodeDataList:
   - validNodes:

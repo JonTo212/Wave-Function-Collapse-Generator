@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: flcornerdown
   m_EditorClassIdentifier: 
   prefabName: flcornerdown
-  weight: 1
+  weight: 5
   prefab: {fileID: 1303821596382928437, guid: 6f180d1e2b521a24b8d437505d29e5ed, type: 3}
   nodeDataList:
   - validNodes:

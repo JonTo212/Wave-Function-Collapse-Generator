@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RBCornerNode
   m_EditorClassIdentifier: 
   prefabName: RBCorner
-  weight: 3
+  weight: 1
   prefab: {fileID: 1303821596382928437, guid: 3c2b3f29975e433408f2a2864c6e0c89, type: 3}
   nodeDataList:
   - validNodes:

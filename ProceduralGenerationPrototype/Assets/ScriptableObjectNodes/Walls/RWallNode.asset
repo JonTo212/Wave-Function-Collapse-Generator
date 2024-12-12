@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RWallNode
   m_EditorClassIdentifier: 
   prefabName: RWall
-  weight: 2
+  weight: 4
   prefab: {fileID: 5049310047659339170, guid: 3c564a99fe2f3d94889e7ae13a02bde0, type: 3}
   nodeDataList:
   - validNodes:
