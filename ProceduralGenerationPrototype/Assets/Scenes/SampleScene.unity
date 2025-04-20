@@ -233,7 +233,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &876706205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -442,29 +442,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f97c5edacf1baf4c86467185c23f165, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridWidth: 5
+  gridWidth: 10
   gridHeight: 1
-  gridDepth: 5
+  gridDepth: 10
   groundTiles:
-  - {fileID: 11400000, guid: 3ce50cba044d82f4b87b0e89fb45ec78, type: 2}
-  - {fileID: 11400000, guid: d71d7b2d0b2750942839a8f599596eaa, type: 2}
-  - {fileID: 11400000, guid: f014431cd45c62c4e89925ffc05b6f92, type: 2}
-  - {fileID: 11400000, guid: 676670e7e900f8744a3e46476d4b4efb, type: 2}
-  - {fileID: 11400000, guid: 8466720a2ebf88b47b66c5197d509929, type: 2}
-  - {fileID: 11400000, guid: 7755e06211a57904da1376204c6b67e7, type: 2}
-  - {fileID: 11400000, guid: 23ace41b81a315a49b8dfe55bd1791ab, type: 2}
-  - {fileID: 11400000, guid: 41c82089d7da12b47bcc36644c6944e3, type: 2}
-  - {fileID: 11400000, guid: f74c551a56651bb49b5cb50489876aa7, type: 2}
-  - {fileID: 11400000, guid: 91fe83620bfc8bb449a6e1424f561516, type: 2}
-  - {fileID: 11400000, guid: c01f18ac487bfbf489cc1150bd56a4a5, type: 2}
-  - {fileID: 11400000, guid: 1a5592356d171ca4b8b06f2c0c1218a0, type: 2}
-  - {fileID: 11400000, guid: 89ceb3a7a209e5842a6fb1adc3f3c005, type: 2}
-  - {fileID: 11400000, guid: df0b8a89ea2554c4c97692a13d413933, type: 2}
-  - {fileID: 11400000, guid: 7fcb831a7a76de141b11028cfb576b00, type: 2}
-  - {fileID: 11400000, guid: e8aaafc263b49f64dbe6573f5c251fdc, type: 2}
+  - {fileID: 11400000, guid: c619067816616e248a1434815a283169, type: 2}
+  - {fileID: 11400000, guid: 0ca2c311604ac354e85256ddbe9d6756, type: 2}
+  - {fileID: 11400000, guid: 6bb062c495f6ed2429b88d8910b99425, type: 2}
+  - {fileID: 11400000, guid: ef07e49f2038e3f4a84d6d25304826b4, type: 2}
+  - {fileID: 11400000, guid: de7977bb9d3829146a9f77b5b4470953, type: 2}
+  - {fileID: 11400000, guid: 6501260d7bee14442881827850531c64, type: 2}
+  - {fileID: 11400000, guid: 7b5c7079fb59b664f8719186e1ce1dba, type: 2}
+  - {fileID: 11400000, guid: dcaa95c3b4cfd8543a83129ebcda6b1d, type: 2}
+  - {fileID: 11400000, guid: 48af88a1899242e46b958a9200648bb1, type: 2}
+  - {fileID: 11400000, guid: d51e2974cf28957408738bb076166763, type: 2}
+  - {fileID: 11400000, guid: d4ea090ca5a80444299b5c44252b74a2, type: 2}
+  - {fileID: 11400000, guid: 9eb0a4f118b19b745b7e8a4698f60327, type: 2}
+  - {fileID: 11400000, guid: 49ece0db72f044b49acfc53113a82719, type: 2}
+  - {fileID: 11400000, guid: 4da0170d72c96534cb283e56f9877e60, type: 2}
+  - {fileID: 11400000, guid: 2ecf7d6e1f2a23746a09e61bfae201c6, type: 2}
+  - {fileID: 11400000, guid: a4ffc3f542c7f164a836f652cb6d96c6, type: 2}
   airTiles: []
   emptyTile: {fileID: 0}
-  fallBackTile: {fileID: 11400000, guid: 3ce50cba044d82f4b87b0e89fb45ec78, type: 2}
+  fallBackTile: {fileID: 11400000, guid: c619067816616e248a1434815a283169, type: 2}
 --- !u!1 &1936370412
 GameObject:
   m_ObjectHideFlags: 0

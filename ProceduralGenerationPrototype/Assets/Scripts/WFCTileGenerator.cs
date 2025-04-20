@@ -16,7 +16,7 @@ public class WFCTileGenerator : MonoBehaviour
     [SerializeField] private WFCTile emptyTile;
     [SerializeField] private WFCTile fallBackTile;
 
-    private List<Vector3Int> toCollapse = new List<Vector3Int>();
+    private Queue<Vector3Int> toCollapse = new Queue<Vector3Int>();
 
     private Vector3Int[] neighbourCoordinates = new Vector3Int[]
     {
@@ -27,6 +27,23 @@ public class WFCTileGenerator : MonoBehaviour
         new Vector3Int(0, 0, 1),
         new Vector3Int(0, 0, -1)
     };
+
+    public void DestroyGrid() //for regenerating -> for some reason using node.instantiatedObject doesn't destroy everything
+    {
+        GameObject[] instantiatedObjects = GameObject.FindGameObjectsWithTag("WFCTile");
+        foreach (GameObject go in instantiatedObjects)
+        {
+            DestroyImmediate(go);
+        }
+    }
+
+    public void Regenerate()
+    {
+        DestroyGrid();
+        InitializeGrid();
+        WFC();
+        //CollapseGrid();
+    }
 
     private void Start()
     {
@@ -51,8 +68,6 @@ public class WFCTileGenerator : MonoBehaviour
 
                     if (y > 0)
                         grid[x, y, z].potentialTiles.AddRange(airTiles);
-
-                    grid[x, y, z].potentialTiles.Add(emptyTile);
                 }
     }
 
@@ -104,12 +119,11 @@ public class WFCTileGenerator : MonoBehaviour
 
         if (state.potentialTiles == null || state.potentialTiles.Count == 0)
         {
-            Debug.LogError($"[CollapseAt] No valid Tiles at {coords}. Using fallback Tile.");
             state.currentTile = fallBackTile;
         }
         else
         {
-            state.currentTile = GetWeightedRandomTile(state.potentialTiles);
+            state.currentTile = GetRandomTile(state.potentialTiles);
         }
 
         state.potentialTiles.Clear();
@@ -121,12 +135,9 @@ public class WFCTileGenerator : MonoBehaviour
     {
         if (potentialTiles == null || potentialTiles.Count == 0)
         {
-            Debug.LogError("[GetWeightedRandomTile] potentialTiles list is null or empty. Returning null.");
             return fallBackTile;
         }
-
-        return fallBackTile;
-        /*int totalWeight = 0;
+        int totalWeight = 0;
         foreach (var Tile in potentialTiles)
             totalWeight += Tile.weight;
 
@@ -140,39 +151,47 @@ public class WFCTileGenerator : MonoBehaviour
                 return Tile;
         }
 
-        return potentialTiles[0];*/
+        return potentialTiles[0];
+    }
+
+    private WFCTile GetRandomTile(List<WFCTile> potentialTiles)
+    {
+        if (potentialTiles == null || potentialTiles.Count == 0)
+        {
+            return fallBackTile;
+        }
+
+        int randomIndex = Random.Range(0, potentialTiles.Count);
+        return potentialTiles[randomIndex];
     }
 
     private void Propagate(Vector3Int coords)
     {
-        toCollapse.Add(coords);
+        toCollapse.Enqueue(coords);
 
         while (toCollapse.Count > 0)
         {
-            Vector3Int current = toCollapse[0];
-            toCollapse.RemoveAt(0);
+            toCollapse.Dequeue();
 
-            foreach (Vector3Int neighbourOffset in neighbourCoordinates)
+            foreach (Vector3Int neighbour in neighbourCoordinates)
             {
-                Vector3Int neighbourCoords = current + neighbourOffset;
+                Vector3Int neighbourCoords = coords + neighbour;
 
-                if (!IsInsideGrid(neighbourCoords))
-                    continue;
-
-                var neighbourState = grid[neighbourCoords.x, neighbourCoords.y, neighbourCoords.z];
-
-                if (neighbourState.collapsed)
-                    continue;
-
-                List<WFCTile> valid = new List<WFCTile>(neighbourState.potentialTiles);
-
-                foreach (var candidate in valid)
+                if (IsInsideGrid(neighbourCoords))
                 {
-                    if (!grid[current.x, current.y, current.z].currentTile.CanConnect(candidate, neighbourOffset))
+                    var neighbourState = grid[neighbourCoords.x, neighbourCoords.y, neighbourCoords.z];
+                    var currentState = grid[coords.x, coords.y, coords.z];
+
+                    List<WFCTile> valid = new List<WFCTile>(neighbourState.potentialTiles);
+
+                    foreach (var candidate in valid)
                     {
-                        neighbourState.potentialTiles.Remove(candidate);
-                        if (!toCollapse.Contains(neighbourCoords))
-                            toCollapse.Add(neighbourCoords);
+                        if (!currentState.currentTile.CanConnect(candidate, neighbour))
+                        {
+                            neighbourState.potentialTiles.Remove(candidate);
+                            if (!toCollapse.Contains(neighbourCoords))
+                                toCollapse.Enqueue(neighbourCoords);
+                        }
                     }
                 }
             }
@@ -191,7 +210,7 @@ public class WFCTileGenerator : MonoBehaviour
         for (int x = 0; x < gridWidth; x++)
             for (int y = 0; y < gridHeight; y++)
                 for (int z = 0; z < gridDepth; z++)
-                    Instantiate(grid[x, y, z].currentTile.prefab, new Vector3(x, y, z), Quaternion.identity);
+                    Instantiate(grid[x, y, z].currentTile.prefab, new Vector3(x, y, z), Quaternion.Euler(90, 0, 0));
     }
 }
 public class TileState

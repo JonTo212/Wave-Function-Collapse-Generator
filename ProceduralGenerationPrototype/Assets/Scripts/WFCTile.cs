@@ -56,7 +56,6 @@ public class WFCTile : ScriptableObject
     {
         if (!faceMap.ContainsKey(direction) || !neighbour.faceMap.ContainsKey(-direction))
         {
-            Debug.LogError($"Face missing at {direction} in {this.name} or {-direction} in {neighbour.name}");
             return false;
         }
 
