@@ -14,8 +14,9 @@ public class WFCTileGenerator : MonoBehaviour
     [SerializeField] private List<WFCTile> groundTiles;
     [SerializeField] private List<WFCTile> pathStartTiles;
     [SerializeField] private List<WFCTile> pathEndTiles;
-    [SerializeField] private List<WFCTile> airTiles;
-    [SerializeField] private WFCTile emptyTile;
+    [SerializeField] private List<WFCTile> pathTiles;
+    //[SerializeField] private List<WFCTile> airTiles;
+    //[SerializeField] private WFCTile emptyTile;
     [SerializeField] private WFCTile fallBackTile;
 
     private Queue<Vector3Int> toCollapse = new Queue<Vector3Int>();
@@ -75,6 +76,29 @@ public class WFCTileGenerator : MonoBehaviour
         WFC();
     }
 
+    #region Wave Function Collapse
+    private bool IsInsideGrid(Vector3Int gridPos)
+    {
+        return gridPos.x >= 0 && gridPos.x < gridWidth &&
+               gridPos.y >= 0 && gridPos.y < gridHeight &&
+               gridPos.z >= 0 && gridPos.z < gridDepth;
+    }
+
+    private void Visualize()
+    {
+        for (int x = 0; x < gridWidth; x++)
+        {
+            for (int y = 0; y < gridHeight; y++)
+            {
+                for (int z = 0; z < gridDepth; z++)
+                {
+                    GameObject tileObj = grid[x, y, z].currentTile.prefab;
+                    Instantiate(tileObj, new Vector3(x, y, z), tileObj.transform.rotation);
+                }
+            }
+        }
+    }
+
     private void InitializeGrid()
     {
         grid = new TileState[gridWidth, gridHeight, gridDepth];
@@ -88,38 +112,17 @@ public class WFCTileGenerator : MonoBehaviour
                 for (int z = 0; z < gridDepth; z++)
                 {
                     Vector3Int currentTile = new Vector3Int(x, y, z);
-                    if (currentTile != start && currentTile != end)
+                    grid[x, y, z] = new TileState
                     {
-                        grid[x, y, z] = new TileState
-                        {
-                            potentialTiles = new List<WFCTile>(groundTiles),
-                            currentTile = null,
-                            collapsed = false
-                        };
+                        potentialTiles = new List<WFCTile>(groundTiles),
+                        currentTile = null,
+                        collapsed = false
+                    };
 
-                        if (y > 0)
-                        {
-                            grid[x, y, z].potentialTiles.AddRange(airTiles);
-                        }
-                    }
-                    else if (currentTile == end)
+                    /*if (y > 0)
                     {
-                        grid[x,y,z] = new TileState
-                        {
-                            potentialTiles = new List<WFCTile>(pathEndTiles),
-                            currentTile = null,
-                            collapsed = false
-                        };
-                    }
-                    else if (currentTile == start)
-                    {
-                        grid[x, y, z] = new TileState
-                        {
-                            potentialTiles = new List<WFCTile>(pathStartTiles),
-                            currentTile = null,
-                            collapsed = false
-                        };
-                    }
+                        grid[x, y, z].potentialTiles.AddRange(airTiles);
+                    }*/
                 }
             }
         }
@@ -251,56 +254,57 @@ public class WFCTileGenerator : MonoBehaviour
             }
         }
     }
+    #endregion
 
-    private bool IsInsideGrid(Vector3Int gridPos)
-    {
-        return gridPos.x >= 0 && gridPos.x < gridWidth &&
-               gridPos.y >= 0 && gridPos.y < gridHeight &&
-               gridPos.z >= 0 && gridPos.z < gridDepth;
-    }
-
-    private void Visualize()
-    {
-        for (int x = 0; x < gridWidth; x++)
-            for (int y = 0; y < gridHeight; y++)
-                for (int z = 0; z < gridDepth; z++)
-                {
-                    GameObject tileObj = grid[x, y, z].currentTile.prefab;
-                    Instantiate(tileObj, new Vector3(x, y, z), tileObj.transform.rotation);
-                }
-    }
-
+    #region Pathfinding
     public bool TryCreatePath(Vector3Int start, Vector3Int end, int requestedLength)
     {
-        List<Vector3Int> shortest = BreadthFirstShortest(start, end);
+        List<Vector3Int> path = ApplyPathfindingAlgorithm(start, end);
 
         //this is a fallback, to future proof any additions that might affect pathfinding
-        if (shortest == null)
+        if (path == null)
         {
             Debug.LogError("No path exists between start and end.");
             return false;
         }
 
         //choose path tiles first
-        CollapsePathTiles(shortest);
+        CollapsePathTiles(path);
         return true;
     }
 
-    private List<Vector3Int> BreadthFirstShortest(Vector3Int start, Vector3Int end)
+    private List<Vector3Int> GetNeighboursTowards(Vector3Int current, Vector3Int end)
     {
-        //finds the shortest path by exploring the closest neighbours first (Breadth-First Search).
-        Queue<Vector3Int> open = new Queue<Vector3Int>();
+        //orders neighbours based on how close they are to the end tile
+        return neighbourCoordinates2D.OrderBy(x => (current + x - end).sqrMagnitude).ToList();
+    }
+    public static List<T> Shuffle<T>(List<T> source)
+    {
+        //uses System.Random to order the list randomly
+        return source.OrderBy(x => rng.Next()).ToList();
+    }
+
+    private List<Vector3Int> ApplyPathfindingAlgorithm(Vector3Int start, Vector3Int end)
+    {
+        //If you use a queue, it finds the shortest path by exploring the closest neighbours first (Breadth-First Search).
+        //If use a stack, it explores the entire branch of possibilities in a given direction before returning to the next (Depth-First Search).
+        Stack<Vector3Int> open = new Stack<Vector3Int>();
         Dictionary<Vector3Int, Vector3Int> cameFrom = new Dictionary<Vector3Int, Vector3Int>();
 
-        open.Enqueue(start);
+        //Queue = Enqueue, Stack = Push
+        open.Push(start);
         cameFrom[start] = start;
 
         while (open.Count > 0)
         {
-            Vector3Int current = open.Dequeue();
+            //Queue = Dequeue, Stack = Pop
+            Vector3Int current = open.Pop();
             if (current == end) break;
 
-            foreach (var direction in neighbourCoordinates2D)
+            List<Vector3Int> neighbours = GetNeighboursTowards(current, end);
+            neighbours = Shuffle(neighbours);
+
+            foreach (var direction in neighbours)
             {
                 Vector3Int newDir = current + direction;
 
@@ -310,7 +314,8 @@ public class WFCTileGenerator : MonoBehaviour
 
                 //check all 4 directions, but, if it is already in cameFrom dictionary, skip it; each tile is only visited once
                 //i.e. this saves the TILE and corresponding DIRECTION.
-                open.Enqueue(newDir);
+                //Queue = Enqueue, Stack = Push
+                open.Push(newDir);
                 cameFrom[newDir] = current;
             }
         }
@@ -369,7 +374,7 @@ public class WFCTileGenerator : MonoBehaviour
 
             //everything in between
             else
-                tileOptions = groundTiles;
+                tileOptions = pathTiles;
 
 
             /* remove any tiles that are 
@@ -437,6 +442,7 @@ public class WFCTileGenerator : MonoBehaviour
             //Debug.Log($"At position {current}, inDir: {inDir}, outDir: {outDir}, candidate count: {candidates.Count()}");
         }
     }
+    #endregion
 }
 public class TileState
 {

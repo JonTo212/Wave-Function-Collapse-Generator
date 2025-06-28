@@ -152,17 +152,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f97c5edacf1baf4c86467185c23f165, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridWidth: 10
+  gridWidth: 25
   gridHeight: 1
-  gridDepth: 10
+  gridDepth: 25
   groundTiles:
-  - {fileID: 11400000, guid: 8588c29d2b905c64e89c2258e1d7ef2a, type: 2}
-  - {fileID: 11400000, guid: da819f06ed6e9d54da55a4acbb4f4517, type: 2}
-  - {fileID: 11400000, guid: eb4cc2b39123b3c4b9f16733c3d0c5f7, type: 2}
-  - {fileID: 11400000, guid: 3a5594ab83767a6419fc3e19c0b5face, type: 2}
   - {fileID: 11400000, guid: 952cd54a4f2645b43924e51d3bb63d9e, type: 2}
-  - {fileID: 11400000, guid: b0de7a2b0a4f24f47ae83c8645f1a8b7, type: 2}
-  - {fileID: 11400000, guid: ddabde6baed3971469d88e4354da857c, type: 2}
   - {fileID: 11400000, guid: c286d5e2fc099a844a8ae80fa0874cff, type: 2}
   - {fileID: 11400000, guid: 595e7f8c196bd094a93203b96d2caefe, type: 2}
   - {fileID: 11400000, guid: e78bbfa7175b5a24cbdb718a01217441, type: 2}
@@ -172,8 +166,13 @@ MonoBehaviour:
   pathEndTiles:
   - {fileID: 11400000, guid: 2288c3e7c1ce1b8439c7492029268fae, type: 2}
   - {fileID: 11400000, guid: 118d15bc5512bfe47b33260c881a697c, type: 2}
-  airTiles: []
-  emptyTile: {fileID: 0}
+  pathTiles:
+  - {fileID: 11400000, guid: 8588c29d2b905c64e89c2258e1d7ef2a, type: 2}
+  - {fileID: 11400000, guid: da819f06ed6e9d54da55a4acbb4f4517, type: 2}
+  - {fileID: 11400000, guid: eb4cc2b39123b3c4b9f16733c3d0c5f7, type: 2}
+  - {fileID: 11400000, guid: 3a5594ab83767a6419fc3e19c0b5face, type: 2}
+  - {fileID: 11400000, guid: b0de7a2b0a4f24f47ae83c8645f1a8b7, type: 2}
+  - {fileID: 11400000, guid: ddabde6baed3971469d88e4354da857c, type: 2}
   fallBackTile: {fileID: 11400000, guid: 952cd54a4f2645b43924e51d3bb63d9e, type: 2}
 --- !u!4 &478164273
 Transform:
@@ -531,8 +530,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a4ffc3f542c7f164a836f652cb6d96c6, type: 2}
   pathStartTiles: []
   pathEndTiles: []
-  airTiles: []
-  emptyTile: {fileID: 0}
+  pathTiles: []
   fallBackTile: {fileID: 11400000, guid: c619067816616e248a1434815a283169, type: 2}
 --- !u!1 &1936370412
 GameObject:
