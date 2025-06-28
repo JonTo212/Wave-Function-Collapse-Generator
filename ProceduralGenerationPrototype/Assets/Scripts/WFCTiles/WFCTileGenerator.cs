@@ -12,12 +12,12 @@ public class WFCTileGenerator : MonoBehaviour
     private TileState[,,] grid;
 
     [SerializeField] private List<WFCTile> groundTiles;
-    [SerializeField] private List<WFCTile> pathStartTiles;
     [SerializeField] private List<WFCTile> pathEndTiles;
     [SerializeField] private List<WFCTile> pathTiles;
+    [SerializeField] private WFCTile crossRoadTile;
+    [SerializeField] private WFCTile fallBackTile;
     //[SerializeField] private List<WFCTile> airTiles;
     //[SerializeField] private WFCTile emptyTile;
-    [SerializeField] private WFCTile fallBackTile;
 
     private Queue<Vector3Int> toCollapse = new Queue<Vector3Int>();
 
@@ -25,7 +25,7 @@ public class WFCTileGenerator : MonoBehaviour
     private Vector3Int end;
     private List<WFCTile> pathableTiles;
 
-    private Vector3Int[] neighbourCoordinates = new Vector3Int[]
+    private Vector3Int[] neighbourCoordinates3D = new Vector3Int[]
     {
         new Vector3Int(0, 1, 0),
         new Vector3Int(0, -1, 0),
@@ -58,9 +58,8 @@ public class WFCTileGenerator : MonoBehaviour
     {
         DestroyGrid();
         InitializeGrid();
-        //GenerateRandomPath();
 
-        bool pathCreated = TryCreatePath(start, end, 25);
+        bool pathCreated = TryCreatePath(start, end);
         if (!pathCreated)
         {
             Debug.LogError("Failed to create path.");
@@ -230,7 +229,7 @@ public class WFCTileGenerator : MonoBehaviour
         {
             toCollapse.Dequeue();
 
-            foreach (Vector3Int neighbour in neighbourCoordinates)
+            foreach (Vector3Int neighbour in neighbourCoordinates3D)
             {
                 Vector3Int neighbourCoords = coords + neighbour;
 
@@ -257,7 +256,7 @@ public class WFCTileGenerator : MonoBehaviour
     #endregion
 
     #region Pathfinding
-    public bool TryCreatePath(Vector3Int start, Vector3Int end, int requestedLength)
+    public bool TryCreatePath(Vector3Int start, Vector3Int end)
     {
         List<Vector3Int> path = ApplyPathfindingAlgorithm(start, end);
 
@@ -323,7 +322,10 @@ public class WFCTileGenerator : MonoBehaviour
         if (!cameFrom.ContainsKey(end))
             return null;
 
-
+        /* rebuild path backwards and flip it, rather than inserting from index 0 for efficiency
+         * can't use cameFrom, because it tells you the tile and corresponding direction that it was relative to the original.
+         * cameFrom[currentReverse] gets the corresponding KEY for currentReverse, and saves it as currentReverse -> this allows us to move backwards through the dictionary and build the list.
+         */
         List<Vector3Int> path = new List<Vector3Int>();
         Vector3Int currentReverse = end;
 
@@ -338,7 +340,7 @@ public class WFCTileGenerator : MonoBehaviour
         return path;
     }
 
-    private void CollapsePathTiles(IReadOnlyList<Vector3Int> path)
+    private void CollapsePathTiles(List<Vector3Int> path)
     {
         WFCTile prevTile = null;
 
@@ -359,18 +361,9 @@ public class WFCTileGenerator : MonoBehaviour
                 outDir = path[i + 1] - current;
 
 
-            //print($"Current = " + current);
-            //print($"InDir = " + inDir);
-            //print($"OutDir = " + outDir);
-
-            /* create tile list */
             //starting tiles
-            if (i == 0) 
-                tileOptions = pathStartTiles; 
-
-             //ending tiles
-            else if (i == path.Count - 1) 
-                tileOptions = pathEndTiles;
+            if (i == 0 || i == path.Count - 1) 
+                tileOptions = pathEndTiles; 
 
             //everything in between
             else
