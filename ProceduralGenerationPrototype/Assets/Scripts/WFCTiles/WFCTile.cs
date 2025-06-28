@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public enum FaceType
@@ -55,13 +56,31 @@ public class WFCTile : ScriptableObject
 
     public bool CanConnect(WFCTile neighbour, Vector3 direction)
     {
-        InitializeFaces();
+        if (faceMap == null || faceMap.Count == 0)
+        {
+            InitializeFaces();
+        }
+
         if (!faceMap.ContainsKey(direction) || !neighbour.faceMap.ContainsKey(-direction))
         {
             return false;
         }
 
         return faceMap[direction] == neighbour.faceMap[-direction];
+    }
+
+    public List<Vector3Int> GetConnectors()
+    {
+        if (faceMap == null || faceMap.Count == 0)
+        {
+            InitializeFaces();
+        }
+
+        if (!pathable) return new List<Vector3Int>();
+
+        return faceMap.Where(pair => pair.Value == FaceType.Blue)
+                      .Select(pair => Vector3Int.FloorToInt(pair.Key))
+                      .ToList();
     }
 
     public bool IsPathCompatible(WFCTile neighbour, Vector3Int dir)

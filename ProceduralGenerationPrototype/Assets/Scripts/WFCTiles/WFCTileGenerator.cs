@@ -14,7 +14,7 @@ public class WFCTileGenerator : MonoBehaviour
     [SerializeField] private List<WFCTile> groundTiles;
     [SerializeField] private List<WFCTile> pathEndTiles;
     [SerializeField] private List<WFCTile> pathTiles;
-    [SerializeField] private WFCTile crossRoadTile;
+    [SerializeField] private List<WFCTile> crossroadTiles;
     [SerializeField] private WFCTile fallBackTile;
     //[SerializeField] private List<WFCTile> airTiles;
     //[SerializeField] private WFCTile emptyTile;
@@ -59,12 +59,10 @@ public class WFCTileGenerator : MonoBehaviour
         DestroyGrid();
         InitializeGrid();
 
-        bool pathCreated = TryCreatePath(start, end);
-        if (!pathCreated)
-        {
-            Debug.LogError("Failed to create path.");
-            return;
-        }
+        List<Vector3Int> multiPath = new List<Vector3Int>();
+        multiPath.AddRange(TryCreatePath(start, end));
+        multiPath.AddRange(TryCreatePath(end, start));
+        CollapsePathTiles(multiPath);
 
         WFC();
     }
@@ -256,7 +254,7 @@ public class WFCTileGenerator : MonoBehaviour
     #endregion
 
     #region Pathfinding
-    public bool TryCreatePath(Vector3Int start, Vector3Int end)
+    public List<Vector3Int> TryCreatePath(Vector3Int start, Vector3Int end)
     {
         List<Vector3Int> path = ApplyPathfindingAlgorithm(start, end);
 
@@ -264,12 +262,10 @@ public class WFCTileGenerator : MonoBehaviour
         if (path == null)
         {
             Debug.LogError("No path exists between start and end.");
-            return false;
+            return new List<Vector3Int>();
         }
 
-        //choose path tiles first
-        CollapsePathTiles(path);
-        return true;
+        return path;
     }
 
     private List<Vector3Int> GetNeighboursTowards(Vector3Int current, Vector3Int end)
@@ -342,98 +338,131 @@ public class WFCTileGenerator : MonoBehaviour
 
     private void CollapsePathTiles(List<Vector3Int> path)
     {
-        WFCTile prevTile = null;
+        //build dictionary of the grid positions and associated hashset of directions that have path tiles (hashset so there's no duplicates for when tiles overlap)
+        Dictionary<Vector3Int, HashSet<Vector3Int>> connectionsAtPoint = new Dictionary<Vector3Int, HashSet<Vector3Int>>();
 
+        //populate dictionary with blank hashsets to avoid errors
+        foreach (Vector3Int pos in path)
+        {
+            connectionsAtPoint[pos] = new HashSet<Vector3Int>();
+        }
+
+        //loop through path and save all previous and next tile directions, because we know they're paths
         for (int i = 0; i < path.Count; i++)
         {
             Vector3Int current = path[i];
-            List<WFCTile> tileOptions;
 
-            /* get previous and next tile positions */
-            //inDir = current tile pos - previous tile pos
-            Vector3Int inDir = Vector3Int.zero;
+            //inDir -> previous tile direction
             if (i > 0)
-                inDir = path[i - 1] - current;
+            {
+                Vector3Int inDir = path[i - 1] - current;
+                if (inDir != Vector3Int.zero)
+                    connectionsAtPoint[current].Add(inDir);
+            }
 
-            //outDir = next tile pos - current tile pos
-            Vector3Int outDir = Vector3Int.zero;
+            //outDir -> next tile direction
             if (i < path.Count - 1)
-                outDir = path[i + 1] - current;
+            {
+                Vector3Int outDir = path[i + 1] - current;
+                if (outDir != Vector3Int.zero)
+                    connectionsAtPoint[current].Add(outDir);
+            }
+        }
 
+        //path.Distinct() functions like a hashset -> only checks duplicates once
+        foreach (Vector3Int currentPoint in path.Distinct())
+        {
+            TileState state = grid[currentPoint.x, currentPoint.y, currentPoint.z];
+            HashSet<Vector3Int> requiredConnections = connectionsAtPoint[currentPoint]; //get the hashset of all connection directions tied to the current spot
+            List<WFCTile> tilePool = new List<WFCTile>();
 
-            //starting tiles
-            if (i == 0 || i == path.Count - 1) 
-                tileOptions = pathEndTiles; 
-
-            //everything in between
+            if (requiredConnections.Count == 1) //if only one connection, use path end
+                tilePool = pathEndTiles; 
+            else if (requiredConnections.Count == 2) //if 2 connections, use straight or corner path
+                tilePool = pathTiles;
             else
-                tileOptions = pathTiles;
+                tilePool = crossroadTiles; //3+ connections = crossroad
 
+            Debug.Log(
+    $"Point {currentPoint}  dirCount={requiredConnections.Count}  " +
+    $"dirs=[{string.Join(",", requiredConnections)}]  pool={tilePool.Count}"
+);  
 
-            /* remove any tiles that are 
-            /* if inDir == 0 -> starting tile
-             * if outDir == 0 -> ending tile
-             * if tile.HasConnector(inDir) -> check if current option on list has a pathable tile with a path face for the previous tile
-             * if tile.HasConnector(outDir) -> check if current option on list has pathable tile with path face for the next tile
-             * end result is a list of tiles that has connections on both sides, or is a start/end tile
-            */
+            //loop through the pool of tiles and choose the one that would fit the requirements
+            WFCTile chosen = PickBestTile(tilePool, requiredConnections);
 
-            /*
-            //this is for debugging
-            foreach(var tile in tileOptions)
-            {
-                bool hasIn = (inDir == Vector3Int.zero) || tile.HasConnector(inDir);
-                bool hasOut = (outDir == Vector3Int.zero) || tile.HasConnector(outDir);
-
-                if (!hasIn || !hasOut)
-                {
-                    Debug.Log(
-                        $"[REJECTED] Tile: {tile.name} at {current} | " +
-                        $"inDir: {inDir}, outDir: {outDir} | " +
-                        $"HasConnector(in): {tile.HasConnector(inDir)} | " +
-                        $"HasConnector(out): {tile.HasConnector(outDir)}");
-                }
-                else
-                {
-                    Debug.Log(
-                        $"[ACCEPTED] Tile: {tile.name} at {current} | " +
-                        $"inDir: {inDir}, outDir: {outDir} | " +
-                        $"HasConnector(in): {tile.HasConnector(inDir)} | " +
-                        $"HasConnector(out): {tile.HasConnector(outDir)}");
-                }
-            }
-            */
-
-            List<WFCTile> candidates = tileOptions.Where(tile =>
-                (inDir == Vector3Int.zero || tile.HasConnector(inDir)) &&
-                (outDir == Vector3Int.zero || tile.HasConnector(outDir))
-                ).ToList();
-
-            //ensure that previous tile can connect to current tile
-            if (prevTile != null && outDir != Vector3Int.zero)
-            {
-                candidates = candidates.Where(tile => prevTile.CanConnect(tile, outDir)).ToList();
-            }
-
-            //returns first tile in the list (first tile that fits the parameters) or null if there's nothing
-            //place the fallback if nothing there
-            WFCTile chosen = candidates.FirstOrDefault();
             if (chosen == null)
             {
-                Debug.LogWarning($"No compatible tile at {current}, using fallback.");
+                Debug.LogWarning($"No suitable path tile for {currentPoint}. Using fallback.");
                 chosen = fallBackTile;
             }
 
-            TileState state = grid[current.x, current.y, current.z];
             state.currentTile = chosen;
-            state.potentialTiles = new List<WFCTile> { chosen };
+            state.potentialTiles.Clear();
+            state.potentialTiles.Add(chosen);
             state.collapsed = true;
 
-            Propagate(current);
-            prevTile = chosen;
-
-            //Debug.Log($"At position {current}, inDir: {inDir}, outDir: {outDir}, candidate count: {candidates.Count()}");
+            Propagate(currentPoint);
         }
+    }
+
+    private WFCTile PickBestTile(List<WFCTile> pool, HashSet<Vector3Int> requiredConnections)
+    {
+        HashSet<Vector3Int> connectionDirs = requiredConnections;
+
+        int fewestExtras = int.MaxValue;
+        List<WFCTile> bestTiles = new List<WFCTile>();
+
+        foreach (WFCTile tile in pool)
+        {
+            //checks if current tile from pool (e.g. path tiles + corner tiles) has a valid connection face in the required connection direction
+            bool isValid = true;
+            foreach (Vector3Int dir in connectionDirs)
+            {
+                if (!tile.HasConnector(dir))
+                {
+                    isValid = false;
+                    break;
+                }
+            }
+            if (!isValid) continue;
+
+
+            //if the tile passed the previous check, check how many faces it has (GetConnectors returns all of the pathable faces)
+            //if there's more than the valid faces, they're counted as extras
+            int extras = 0;
+            foreach (Vector3Int connections in tile.GetConnectors())
+            {
+                if (!connectionDirs.Contains(connections))
+                {
+                    extras++;
+                }
+            }
+
+            //if there's less extra connectors than any tile we've seen so far (remember this is a foreach loop), clear the list of bestTiles and add the current one
+            //this is because the current tile is better than the previous one
+            if (extras < fewestExtras)
+            {
+                fewestExtras = extras;
+                bestTiles.Clear();
+                bestTiles.Add(tile);
+            }
+
+            //if it's equivalent, add it to the list
+            else if (extras == fewestExtras)
+            {
+                bestTiles.Add(tile);
+            }
+
+            //stop checking if we find a 'perfect' tile
+            if (fewestExtras == 0)
+                break;
+        }
+
+        if (bestTiles.Count > 0)
+            return bestTiles[rng.Next(bestTiles.Count)];
+        else
+            return fallBackTile;
     }
     #endregion
 }
