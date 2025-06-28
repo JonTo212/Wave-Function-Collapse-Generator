@@ -3,14 +3,54 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+#region PathType
+public enum PathMode
+{
+    Manual,
+    Random,
+    EntireGrid
+}
+
+
+[System.Serializable]
+public class PathProperties
+{
+    public PathMode mode;
+    public Vector3Int start;
+    public Vector3Int end;
+
+    //switch path generation type based on enum selected in editor, set start and end points accordingly
+    public void Generate(int gridWidth, int gridDepth)
+    {
+        switch (mode)
+        {
+            case PathMode.Random:
+                start = new Vector3Int(Random.Range(0, gridWidth), 0, Random.Range(0, gridDepth));
+                end = new Vector3Int(Random.Range(0, gridWidth), 0, Random.Range(0, gridDepth));
+                break;
+
+            case PathMode.EntireGrid:
+                start = Vector3Int.zero;
+                end = new Vector3Int(gridWidth - 1, 0, gridDepth - 1);
+                break;
+
+            case PathMode.Manual:
+            default:
+                break;
+        }
+    }
+}
+#endregion
+
 public class WFCTileGenerator : MonoBehaviour
 {
+    [Header("Grid setup")]
     [SerializeField] private int gridWidth;
     [SerializeField] private int gridHeight;
     [SerializeField] private int gridDepth;
-
     private TileState[,,] grid;
 
+    [Header("Tiles")]
     [SerializeField] private List<WFCTile> groundTiles;
     [SerializeField] private List<WFCTile> pathEndTiles;
     [SerializeField] private List<WFCTile> pathTiles;
@@ -19,12 +59,10 @@ public class WFCTileGenerator : MonoBehaviour
     //[SerializeField] private List<WFCTile> airTiles;
     //[SerializeField] private WFCTile emptyTile;
 
+    [Header("WFC queue")]
     private Queue<Vector3Int> toCollapse = new Queue<Vector3Int>();
 
-    private Vector3Int start;
-    private Vector3Int end;
-    private List<WFCTile> pathableTiles;
-
+    [Header("Directional coordinates")]
     private Vector3Int[] neighbourCoordinates3D = new Vector3Int[]
     {
         new Vector3Int(0, 1, 0),
@@ -34,7 +72,6 @@ public class WFCTileGenerator : MonoBehaviour
         new Vector3Int(0, 0, 1),
         new Vector3Int(0, 0, -1)
     };
-
     private Vector3Int[] neighbourCoordinates2D = new Vector3Int[]
     {
         new Vector3Int(-1, 0, 0),
@@ -43,7 +80,9 @@ public class WFCTileGenerator : MonoBehaviour
         new Vector3Int(0, 0, -1)
     };
 
+    [Header("Pathfinding")]
     private static System.Random rng = new System.Random(); //to be called for Shuffle
+    [SerializeField] public List<PathProperties> paths = new List<PathProperties>();
 
     public void DestroyGrid() //for regenerating -> for some reason using node.instantiatedObject doesn't destroy everything
     {
@@ -58,12 +97,8 @@ public class WFCTileGenerator : MonoBehaviour
     {
         DestroyGrid();
         InitializeGrid();
-
-        List<Vector3Int> multiPath = new List<Vector3Int>();
-        multiPath.AddRange(TryCreatePath(start, end));
-        multiPath.AddRange(TryCreatePath(end, start));
-        CollapsePathTiles(multiPath);
-
+          
+        CollapsePathTiles(GeneratePaths());
         WFC();
     }
 
@@ -99,8 +134,8 @@ public class WFCTileGenerator : MonoBehaviour
     private void InitializeGrid()
     {
         grid = new TileState[gridWidth, gridHeight, gridDepth];
-        start = new Vector3Int(0, 0, 0);
-        end = new Vector3Int(gridWidth - 1, 0, gridDepth - 1);
+        //start = new Vector3Int(0, 0, 0);
+        //end = new Vector3Int(gridWidth - 1, 0, gridDepth - 1);
 
         for (int x = 0; x < gridWidth; x++)
         {
@@ -254,7 +289,74 @@ public class WFCTileGenerator : MonoBehaviour
     #endregion
 
     #region Pathfinding
-    public List<Vector3Int> TryCreatePath(Vector3Int start, Vector3Int end)
+    private bool IsFaceNeighbour(Vector3Int dir)
+    {
+        //check if dir is a face-adjacent direction (1 unit away in 1 axis) -> for multi-paths
+        //e.g. if end point for path 1 = 9,0,9, and path 2 starts at 1,0,0, the resulting 'dir' is > 1 unit
+        return dir != Vector3Int.zero && Mathf.Abs(dir.x) + Mathf.Abs(dir.y) + Mathf.Abs(dir.z) == 1;
+    }
+
+    private void AddConnections(List<Vector3Int> path, Dictionary<Vector3Int, HashSet<Vector3Int>> multiPathMap)
+    {
+        //go through path points, add them to dictionary with its corresponding directions that have connections
+        for (int i = 0; i < path.Count; i++)
+        {
+            Vector3Int current = path[i];
+
+            //create a hashset for current point's connection directions if the dictionary doesn't have one
+            if (!multiPathMap.TryGetValue(current, out var set))
+            {
+                set = new HashSet<Vector3Int>();
+                multiPathMap[current] = set;
+            }
+
+            //previous tile; IsFaceNeighbour makes sure they connect
+            //i.e. don't add the big gap between start/end points of each path if it isn't connected
+            if (i > 0)
+            {
+                Vector3Int inDir = path[i - 1] - current;
+                if (IsFaceNeighbour(inDir))
+                {
+                    set.Add(inDir);
+                }
+            }
+
+            //next tile
+            if (i < path.Count - 1)
+            {
+                Vector3Int outDir = path[i + 1] - current;
+                if (IsFaceNeighbour(outDir))
+                {
+                    set.Add(outDir);
+                }
+            }
+        }
+    }
+
+    private Dictionary<Vector3Int, HashSet<Vector3Int>> GeneratePaths()
+    {
+        //dictionary of grid point + connections (hashset so there's no dupes)
+        Dictionary<Vector3Int, HashSet<Vector3Int>> connectors = new Dictionary<Vector3Int, HashSet<Vector3Int>>();
+
+        //loop through every path specified in the editor, add the connections to the dictionary
+        foreach (PathProperties path in paths)
+        {
+            //call path initializer to get path length
+            path.Generate(gridWidth, gridDepth);
+
+            //call pathfinding algorithm for each path
+            List<Vector3Int> currentPath = TryCreatePath(path.start, path.end);
+
+            if (currentPath == null || currentPath.Count == 0)
+                continue;
+
+            AddConnections(currentPath, connectors);
+        }
+
+        return connectors;
+    }
+
+    private List<Vector3Int> TryCreatePath(Vector3Int start, Vector3Int end)
     {
         List<Vector3Int> path = ApplyPathfindingAlgorithm(start, end);
 
@@ -273,7 +375,7 @@ public class WFCTileGenerator : MonoBehaviour
         //orders neighbours based on how close they are to the end tile
         return neighbourCoordinates2D.OrderBy(x => (current + x - end).sqrMagnitude).ToList();
     }
-    public static List<T> Shuffle<T>(List<T> source)
+    private static List<T> Shuffle<T>(List<T> source)
     {
         //uses System.Random to order the list randomly
         return source.OrderBy(x => rng.Next()).ToList();
@@ -336,67 +438,39 @@ public class WFCTileGenerator : MonoBehaviour
         return path;
     }
 
-    private void CollapsePathTiles(List<Vector3Int> path)
+    private void CollapsePathTiles(Dictionary<Vector3Int, HashSet<Vector3Int>> connectionsAtPoint)
     {
-        //build dictionary of the grid positions and associated hashset of directions that have path tiles (hashset so there's no duplicates for when tiles overlap)
-        Dictionary<Vector3Int, HashSet<Vector3Int>> connectionsAtPoint = new Dictionary<Vector3Int, HashSet<Vector3Int>>();
-
-        //populate dictionary with blank hashsets to avoid errors
-        foreach (Vector3Int pos in path)
+        foreach (var gridPoint in connectionsAtPoint)
         {
-            connectionsAtPoint[pos] = new HashSet<Vector3Int>();
-        }
+            //get current grid point and its connection directions from dictionary
+            Vector3Int currentPoint = gridPoint.Key;
+            HashSet<Vector3Int> requiredConnectors = gridPoint.Value;
 
-        //loop through path and save all previous and next tile directions, because we know they're paths
-        for (int i = 0; i < path.Count; i++)
-        {
-            Vector3Int current = path[i];
+            List<WFCTile> pool;
 
-            //inDir -> previous tile direction
-            if (i > 0)
+            switch (requiredConnectors.Count)
             {
-                Vector3Int inDir = path[i - 1] - current;
-                if (inDir != Vector3Int.zero)
-                    connectionsAtPoint[current].Add(inDir);
+                //1 connection = path end
+                case 1: 
+                    pool = pathEndTiles; 
+                    break;
+
+                //2 connections = straight/corner
+                case 2: 
+                    pool = pathTiles; 
+                    break;
+
+                //3+ connections = crossroads
+                default: 
+                    pool = crossroadTiles; 
+                    break; 
             }
 
-            //outDir -> next tile direction
-            if (i < path.Count - 1)
-            {
-                Vector3Int outDir = path[i + 1] - current;
-                if (outDir != Vector3Int.zero)
-                    connectionsAtPoint[current].Add(outDir);
-            }
-        }
+            //go through tiles in the pool and prune the ones that have extra + misaligned connections based on required connection hashset
+            WFCTile chosen = PickBestTile(pool, requiredConnectors);
 
-        //path.Distinct() functions like a hashset -> only checks duplicates once
-        foreach (Vector3Int currentPoint in path.Distinct())
-        {
+            //manual collapse + propagation
             TileState state = grid[currentPoint.x, currentPoint.y, currentPoint.z];
-            HashSet<Vector3Int> requiredConnections = connectionsAtPoint[currentPoint]; //get the hashset of all connection directions tied to the current spot
-            List<WFCTile> tilePool = new List<WFCTile>();
-
-            if (requiredConnections.Count == 1) //if only one connection, use path end
-                tilePool = pathEndTiles; 
-            else if (requiredConnections.Count == 2) //if 2 connections, use straight or corner path
-                tilePool = pathTiles;
-            else
-                tilePool = crossroadTiles; //3+ connections = crossroad
-
-            Debug.Log(
-    $"Point {currentPoint}  dirCount={requiredConnections.Count}  " +
-    $"dirs=[{string.Join(",", requiredConnections)}]  pool={tilePool.Count}"
-);  
-
-            //loop through the pool of tiles and choose the one that would fit the requirements
-            WFCTile chosen = PickBestTile(tilePool, requiredConnections);
-
-            if (chosen == null)
-            {
-                Debug.LogWarning($"No suitable path tile for {currentPoint}. Using fallback.");
-                chosen = fallBackTile;
-            }
-
             state.currentTile = chosen;
             state.potentialTiles.Clear();
             state.potentialTiles.Add(chosen);
@@ -459,10 +533,13 @@ public class WFCTileGenerator : MonoBehaviour
                 break;
         }
 
+        //if there's more than 1 'best fit' tile, use rng to choose
         if (bestTiles.Count > 0)
             return bestTiles[rng.Next(bestTiles.Count)];
-        else
+        else {
+            print("fallback");
             return fallBackTile;
+        }
     }
     #endregion
 }
