@@ -152,9 +152,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f97c5edacf1baf4c86467185c23f165, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridWidth: 10
+  gridWidth: 25
   gridHeight: 1
-  gridDepth: 10
+  gridDepth: 25
   groundTiles:
   - {fileID: 11400000, guid: 952cd54a4f2645b43924e51d3bb63d9e, type: 2}
   - {fileID: 11400000, guid: c286d5e2fc099a844a8ae80fa0874cff, type: 2}
@@ -180,6 +180,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 172ceb4fbc97f27438f2b203b6c16f93, type: 2}
   - {fileID: 11400000, guid: b0f95dd20eb948646b2d9e44c8574397, type: 2}
   fallBackTile: {fileID: 11400000, guid: 952cd54a4f2645b43924e51d3bb63d9e, type: 2}
+  paths:
+  - mode: 1
+    start: {x: 0, y: 0, z: 0}
+    end: {x: 0, y: 0, z: 0}
+    desiredLength: 0
 --- !u!4 &478164273
 Transform:
   m_ObjectHideFlags: 0
@@ -538,6 +543,7 @@ MonoBehaviour:
   pathTiles: []
   crossroadTiles: []
   fallBackTile: {fileID: 11400000, guid: c619067816616e248a1434815a283169, type: 2}
+  paths: []
 --- !u!1 &1936370412
 GameObject:
   m_ObjectHideFlags: 0
