@@ -423,7 +423,8 @@ public class WFCTileGenerator : MonoBehaviour
         {
             Vector3Int current = path[i];
 
-            //create a hashset for current point's connection directions if the dictionary doesn't have one
+            //create a hashset for current point's connection directions if the dictionary doesn't have one -> "set"
+            //set is the name of the hashset in the dictionary. this way, if tiles are overlapping, set gets points added to it; otherwise, set is created.
             if (!multiPathMap.TryGetValue(current, out var set))
             {
                 set = new HashSet<Vector3Int>();
