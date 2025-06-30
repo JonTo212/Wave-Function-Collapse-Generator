@@ -181,10 +181,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b0f95dd20eb948646b2d9e44c8574397, type: 2}
   fallBackTile: {fileID: 11400000, guid: 952cd54a4f2645b43924e51d3bb63d9e, type: 2}
   paths:
-  - mode: 1
+  - mode: 2
     start: {x: 0, y: 0, z: 0}
-    end: {x: 0, y: 0, z: 0}
-    desiredLength: 0
+    end: {x: 24, y: 0, z: 24}
+    useShortestPath: 0
 --- !u!4 &478164273
 Transform:
   m_ObjectHideFlags: 0

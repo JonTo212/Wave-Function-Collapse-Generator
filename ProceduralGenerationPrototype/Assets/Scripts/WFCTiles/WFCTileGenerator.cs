@@ -11,6 +11,13 @@ public enum PathMode
     EntireGrid
 }
 
+public enum TileType
+{
+    Ground,
+    Path,
+    PathEnd,
+    Crossroad
+}
 
 [System.Serializable]
 public class PathProperties
@@ -57,6 +64,8 @@ public class WFCTileGenerator : MonoBehaviour
     [SerializeField] private List<WFCTile> pathTiles;
     [SerializeField] private List<WFCTile> crossroadTiles;
     [SerializeField] private WFCTile fallBackTile;
+    private Dictionary<TileType, List<WFCTile>> tileTypes = new Dictionary<TileType, List<WFCTile>>();
+    private HashSet<WFCTile> allTiles = new HashSet<WFCTile>();
     //[SerializeField] private List<WFCTile> airTiles;
     //[SerializeField] private WFCTile emptyTile;
 
@@ -85,6 +94,16 @@ public class WFCTileGenerator : MonoBehaviour
     private static System.Random rng = new System.Random(); //to be called for Shuffle
     [SerializeField] public List<PathProperties> paths = new List<PathProperties>();
 
+    #region UI button functions
+    public void PopulateTileTypes()
+    {
+        tileTypes.Clear();
+        tileTypes[TileType.Ground] = groundTiles;
+        tileTypes[TileType.Path] = pathTiles;
+        tileTypes[TileType.PathEnd] = pathEndTiles;
+        tileTypes[TileType.Crossroad] = crossroadTiles;
+    }
+
     public void DestroyGrid() //for regenerating -> for some reason using node.instantiatedObject doesn't destroy everything
     {
         GameObject[] instantiatedObjects = GameObject.FindGameObjectsWithTag("WFCTile");
@@ -94,20 +113,61 @@ public class WFCTileGenerator : MonoBehaviour
         }
     }
 
-    public void Regenerate()
+    public void RegenerateWFC() //for WFC button
     {
         DestroyGrid();
-        InitializeGrid();
-          
+        InitializeGridWithAllTiles();
+
+        WFC();
+    }
+
+    public void RegeneratePath() //for WFC + Pathfinding button
+    {
+        DestroyGrid();
+        InitializeGridForPath();
+
         CollapsePathTiles(GeneratePaths());
         WFC();
     }
 
-    private void Start()
+    public void AddTileType(TileType tileType) //for WFC button
     {
-        InitializeGrid();
-        WFC();
+        PopulateTileTypes();
+
+        //UnionWith is just AddRange for a hashset -> use hashset so there's no dupes
+        allTiles.UnionWith(tileTypes[tileType]);
     }
+
+    public void RemoveTileType(TileType tileType) //for WFC button
+    {
+        PopulateTileTypes();
+        List<WFCTile> tilesToRemove = tileTypes[tileType];
+
+        foreach (WFCTile tile in tilesToRemove)
+        {
+            allTiles.Remove(tile);
+        }
+    }
+
+    public void AddAllTiles() //for WFC button
+    {
+        PopulateTileTypes();
+        allTiles.Clear();
+
+        foreach (var kvp in tileTypes)
+        {
+            foreach (WFCTile tile in kvp.Value)
+            {
+                allTiles.Add(tile);
+            }
+        }
+    }
+
+    public void RemoveAllTiles() //for WFC button
+    {
+        allTiles.Clear();
+    }
+    #endregion
 
     #region Wave Function Collapse
     private bool IsInsideGrid(Vector3Int gridPos)
@@ -137,7 +197,7 @@ public class WFCTileGenerator : MonoBehaviour
         }
     }
 
-    private void InitializeGrid()
+    private void InitializeGridWithAllTiles()
     {
         //build grid, fill it with data structures that determine whether the grid point is collapsed
         grid = new TileState[gridWidth, gridHeight, gridDepth];
@@ -150,9 +210,10 @@ public class WFCTileGenerator : MonoBehaviour
                 {
                     //only give the potential tiles list non-pathed tiles, since we are building the path separately
                     Vector3Int currentTile = new Vector3Int(x, y, z);
+
                     grid[x, y, z] = new TileState
                     {
-                        potentialTiles = new List<WFCTile>(groundTiles),
+                        potentialTiles = new List<WFCTile>(allTiles),
                         currentTile = null,
                         collapsed = false
                     };
@@ -318,6 +379,36 @@ public class WFCTileGenerator : MonoBehaviour
     #endregion
 
     #region Pathfinding
+    private void InitializeGridForPath()
+    {
+        //build grid, fill it with data structures that determine whether the grid point is collapsed
+        grid = new TileState[gridWidth, gridHeight, gridDepth];
+
+        for (int x = 0; x < gridWidth; x++)
+        {
+            for (int y = 0; y < gridHeight; y++)
+            {
+                for (int z = 0; z < gridDepth; z++)
+                {
+                    //only give the potential tiles list non-pathed tiles, since we are building the path separately
+                    Vector3Int currentTile = new Vector3Int(x, y, z);
+
+                    grid[x, y, z] = new TileState
+                    {
+                        potentialTiles = new List<WFCTile>(groundTiles),
+                        currentTile = null,
+                        collapsed = false
+                    };
+
+                    /*if (y > 0)
+                    {
+                        grid[x, y, z].potentialTiles.AddRange(airTiles);
+                    }*/
+                }
+            }
+        }
+    }
+
     private bool IsFaceNeighbour(Vector3Int dir)
     {
         //check if dir is a face-adjacent direction (1 unit away in 1 axis) -> for multi-paths
